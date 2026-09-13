@@ -60,42 +60,23 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Custom CSS for Scrollbars & Glassmorphism -->
   <style>
     body {
       font-family: 'Inter', sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
-    
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    
-    .glass-header {
-      background: rgba(15, 23, 42, 0.88);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-    
-    .glass-card {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .modal-overlay {
-      background: rgba(3, 7, 18, 0.82);
-      backdrop-filter: blur(6px);
-    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .glass-header { background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .modal-overlay { background: rgba(3, 7, 18, 0.82); backdrop-filter: blur(6px); }
+    .nav-tab-active { transform: translateY(-4px) scale(1.05); color: #4ade80 !important; }
+    .nav-tab { transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease; }
   </style>
 </head>
 <body class="bg-gray-950 text-gray-100 flex flex-col min-h-full max-w-md mx-auto shadow-2xl relative border-x border-gray-800/60 overflow-x-hidden selection:bg-mtaa-500 selection:text-white">
 
-  <!-- Splash Screen (With Instant Tap Dismiss & Fail-Safe Timer) -->
+  <!-- Splash Screen -->
   <div id="splashScreen" onclick="this.style.display='none'; this.style.pointerEvents='none';" class="fixed inset-0 z-50 bg-gray-950 flex flex-col items-center justify-center p-6 transition-opacity duration-300 max-w-md mx-auto pointer-events-auto cursor-pointer select-none">
     <div class="relative flex flex-col items-center">
       <div class="w-20 h-20 bg-gradient-to-tr from-mtaa-600 via-mtaa-500 to-emerald-300 rounded-2xl flex items-center justify-center shadow-2xl animate-pulse-glow mb-4">
@@ -105,7 +86,6 @@
       <p class="text-xs text-mtaa-300 font-medium tracking-wide">Soko la Mtaani Kwako</p>
     </div>
 
-    <!-- Realistic Progress Bar -->
     <div class="w-48 bg-gray-900 h-2 rounded-full mt-8 overflow-hidden border border-gray-800 relative">
       <div class="bg-gradient-to-r from-mtaa-500 to-emerald-400 h-full rounded-full animate-progress-fill relative">
         <div class="absolute right-0 top-0 bottom-0 w-2 bg-white/80 rounded-full shadow-[0_0_8px_#fff]"></div>
@@ -128,7 +108,7 @@
           }, 300);
         }
       }
-      setTimeout(forceHideSplash, 1000);
+      setTimeout(forceHideSplash, 1200);
       window.addEventListener('DOMContentLoaded', function() { setTimeout(forceHideSplash, 800); });
     })();
   </script>
@@ -144,27 +124,21 @@
         <span class="text-[10px] bg-mtaa-500/20 text-mtaa-300 border border-mtaa-500/30 px-1.5 py-0.5 rounded font-mono">LIVE</span>
       </div>
       
-      <!-- Help & Neighborhood Selector -->
+      <!-- Help & Region Selector -->
       <div class="flex items-center gap-2">
         <button id="helpBtn" class="w-8 h-8 bg-mtaa-900/80 border border-mtaa-700/50 rounded-full flex items-center justify-center text-mtaa-300 hover:bg-mtaa-800 transition-colors" title="Msaada & Usalama">
           <i class="ph ph-question text-base"></i>
         </button>
 
         <div class="relative">
-          <button id="neighborhoodBtn" class="flex items-center gap-1.5 bg-mtaa-900/80 border border-mtaa-700/50 rounded-full px-3 py-1.5 text-xs font-medium text-mtaa-200 hover:bg-mtaa-800 transition-colors">
+          <button id="regionBtn" class="flex items-center gap-1.5 bg-mtaa-900/80 border border-mtaa-700/50 rounded-full px-3 py-1.5 text-xs font-medium text-mtaa-200 hover:bg-mtaa-800 transition-colors">
             <i class="ph ph-map-pin text-mtaa-400"></i>
-            <span id="currentNeighborhood">All Areas</span>
+            <span id="currentRegion">Tanzania Nzima</span>
             <i class="ph ph-caret-down text-xs text-mtaa-400"></i>
           </button>
           
-          <div id="neighborhoodDropdown" class="hidden absolute right-0 top-full mt-2 w-48 bg-gray-800 border border-gray-700 rounded-xl shadow-xl z-50 overflow-hidden animate-fade-in">
-            <div class="p-1">
-              <button class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-mtaa-900 text-gray-300 hover:text-mtaa-300 transition-colors neighborhood-option" data-value="All Areas">Maeneo Yote (All)</button>
-              <button class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-mtaa-900 text-gray-300 hover:text-mtaa-300 transition-colors neighborhood-option" data-value="Area C">📍 Area C</button>
-              <button class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-mtaa-900 text-gray-300 hover:text-mtaa-300 transition-colors neighborhood-option" data-value="Majengo">📍 Majengo</button>
-              <button class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-mtaa-900 text-gray-300 hover:text-mtaa-300 transition-colors neighborhood-option" data-value="Nzuguni">📍 Nzuguni</button>
-              <button class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-mtaa-900 text-gray-300 hover:text-mtaa-300 transition-colors neighborhood-option" data-value="Ipagala">📍 Ipagala</button>
-            </div>
+          <div id="regionDropdown" class="hidden absolute right-0 top-full mt-2 w-48 bg-gray-800 border border-gray-700 rounded-xl shadow-xl z-50 overflow-hidden animate-fade-in max-h-60 overflow-y-auto">
+            <div class="p-1" id="regionOptionList"></div>
           </div>
         </div>
       </div>
@@ -184,7 +158,7 @@
 
   <main class="flex-1 px-4 pt-3 pb-28">
     
-    <!-- Anti-Scam Safety Warning Banner -->
+    <!-- Anti-Scam Banner -->
     <div class="mb-3 bg-amber-950/60 border border-amber-500/40 rounded-xl p-2.5 flex items-center gap-2.5 shadow-sm">
       <i class="ph-fill ph-shield-warning text-amber-400 text-lg flex-shrink-0"></i>
       <div class="text-[10px] text-amber-200/90 leading-tight">
@@ -192,32 +166,17 @@
       </div>
     </div>
 
-    <!-- Home View (Products) -->
+    <!-- Home View -->
     <div id="homeView" class="tab-view space-y-4">
-      
-      <!-- Category Chips -->
       <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
-        <button class="category-chip active bg-mtaa-500 text-gray-950 font-semibold px-3 py-1.5 rounded-full whitespace-nowrap transition-all" data-cat="all">
-          ✨ Zote
-        </button>
-        <button class="category-chip bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-full whitespace-nowrap transition-all" data-cat="Elektroniki">
-          📱 Elektroniki
-        </button>
-        <button class="category-chip bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-full whitespace-nowrap transition-all" data-cat="Samani">
-          🛋️ Samani
-        </button>
-        <button class="category-chip bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-full whitespace-nowrap transition-all" data-cat="Magari">
-          🚗 Magari & Pikipiki
-        </button>
-        <button class="category-chip bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-full whitespace-nowrap transition-all" data-cat="Nguo">
-          👗 Nguo & Viatu
-        </button>
-        <button class="category-chip bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-full whitespace-nowrap transition-all" data-cat="Huduma">
-          🔧 Huduma
-        </button>
+        <button class="category-chip active bg-mtaa-500 text-gray-950 font-semibold px-3 py-1.5 rounded-full whitespace-nowrap transition-all" data-cat="all">✨ Zote</button>
+        <button class="category-chip bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-full whitespace-nowrap transition-all" data-cat="Elektroniki">📱 Elektroniki</button>
+        <button class="category-chip bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-full whitespace-nowrap transition-all" data-cat="Samani">🛋️ Samani</button>
+        <button class="category-chip bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-full whitespace-nowrap transition-all" data-cat="Magari">🚗 Magari & Pikipiki</button>
+        <button class="category-chip bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-full whitespace-nowrap transition-all" data-cat="Nguo">👗 Nguo & Viatu</button>
+        <button class="category-chip bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-1.5 rounded-full whitespace-nowrap transition-all" data-cat="Huduma">🔧 Huduma</button>
       </div>
 
-      <!-- Sorting Filter Bar -->
       <div class="flex items-center justify-between text-xs text-gray-400 pt-1">
         <span id="productCountText">Inapakia bidhaa...</span>
         <div class="flex items-center gap-1">
@@ -231,11 +190,10 @@
         </div>
       </div>
 
-      <!-- Product List Grid (2-Column Layout for Mobile) -->
       <div id="productList" class="grid grid-cols-2 gap-2.5 sm:gap-3.5"></div>
     </div>
 
-    <!-- Favorites / Wishlist View -->
+    <!-- Favorites View -->
     <div id="favoritesView" class="tab-view hidden space-y-4">
       <div class="flex items-center justify-between border-b border-gray-800 pb-3">
         <h2 class="text-base font-bold text-white flex items-center gap-2">
@@ -245,22 +203,6 @@
       </div>
       <div id="favoritesList" class="grid grid-cols-1 gap-3"></div>
     </div>
-      </div>
-
-      <!-- Product List Grid -->
-      <div id="productList" class="grid grid-cols-1 gap-4"></div>
-    </div>
-
-    <!-- Favorites / Wishlist View -->
-    <div id="favoritesView" class="tab-view hidden space-y-4">
-      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
-        <h2 class="text-base font-bold text-white flex items-center gap-2">
-          <i class="ph-fill ph-heart text-rose-500"></i> Bidhaa Ulizozipenda
-        </h2>
-        <span id="favCount" class="text-xs bg-rose-500/20 text-rose-300 px-2.5 py-0.5 rounded-full font-mono">0</span>
-      </div>
-      <div id="favoritesList" class="grid grid-cols-1 gap-4"></div>
-    </div>
 
     <!-- Profile View -->
     <div id="profileView" class="tab-view hidden space-y-4">
@@ -268,7 +210,7 @@
         <div class="w-16 h-16 bg-gradient-to-tr from-mtaa-500 to-emerald-300 rounded-full mx-auto flex items-center justify-center text-gray-950 font-bold text-2xl shadow-lg">
           <i class="ph ph-user"></i>
         </div>
-        <h3 class="font-bold text-white text-base" id="profileUserKey">Akaunti ya Muuzaji</h3>
+        <h3 class="font-bold text-white text-base">Akaunti ya Muuzaji</h3>
         <p class="text-xs text-gray-400">Device ID: <span id="deviceIdDisplay" class="font-mono text-mtaa-400">...</span></p>
         <p class="text-[11px] text-gray-500">Matangazo unayotuma kwenye simu hii yanalindwa na yanaweza kufutwa na wewe pekee.</p>
       </div>
@@ -279,7 +221,6 @@
       </div>
     </div>
 
-    <!-- Footer Developer Credits -->
     <footer class="mt-8 pt-4 pb-2 border-t border-gray-800/60 text-center">
       <p class="text-[11px] text-gray-400 flex items-center justify-center gap-1 font-medium">
         <span>Developed with</span>
@@ -295,7 +236,7 @@
   <!-- Navigation Bar -->
   <nav class="fixed bottom-0 left-0 right-0 glass-header border-t border-mtaa-800/50 z-40 max-w-md mx-auto">
     <div class="grid grid-cols-4 items-end py-2 px-2 relative">
-      <button class="nav-tab active flex flex-col items-center justify-center text-mtaa-400 transition-colors" data-tab="home">
+      <button class="nav-tab nav-tab-active flex flex-col items-center justify-center text-mtaa-400 transition-colors" data-tab="home">
         <i class="ph-fill ph-house text-xl"></i>
         <span class="text-[10px] font-medium mt-0.5">Sokoni</span>
       </button>
@@ -305,7 +246,6 @@
         <span class="text-[10px] font-medium mt-0.5">Favorites</span>
       </button>
 
-      <!-- Center Floating Plus Button -->
       <div class="flex flex-col items-center justify-center -mt-6">
         <button id="openPostModalBtn" class="w-12 h-12 bg-gradient-to-tr from-mtaa-500 via-mtaa-400 to-emerald-300 rounded-full flex items-center justify-center text-gray-950 font-extrabold text-2xl shadow-lg shadow-mtaa-500/40 border-4 border-gray-950 hover:scale-105 active:scale-95 transition-transform" title="Tangaza Bidhaa">
           <i class="ph ph-plus"></i>
@@ -325,7 +265,7 @@
     <div class="modal-overlay absolute inset-0" id="helpModalOverlay"></div>
     <div class="absolute bottom-0 left-0 right-0 bg-gray-900 rounded-t-3xl max-h-[85vh] overflow-y-auto animate-slide-up max-w-md mx-auto">
       <div class="sticky top-0 bg-gray-900/95 backdrop-blur z-10 px-4 py-3 flex items-center justify-between border-b border-gray-800">
-        <h3 class="font-bold text-sm text-white flex items-center gap-1.5"><i class="ph ph-question text-mtaa-400"></i> Msaada na Usalama (Help)</h3>
+        <h3 class="font-bold text-sm text-white flex items-center gap-1.5"><i class="ph ph-question text-mtaa-400"></i> Msaada na Usalama</h3>
         <button id="closeHelpModal" class="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
           <i class="ph ph-x text-gray-400"></i>
         </button>
@@ -333,26 +273,20 @@
       
       <div class="p-4 space-y-4 text-xs text-gray-300">
         <div class="bg-gray-800/80 p-3.5 rounded-2xl border border-gray-700/60 space-y-2">
-          <h4 class="font-bold text-mtaa-300 flex items-center gap-1.5 text-xs"><i class="ph ph-plus-circle"></i> Jinsi ya Kuweka Tangazo?</h4>
+          <h4 class="font-bold text-mtaa-300 text-xs">🛒 Jinsi ya Kuweka Tangazo?</h4>
           <p class="text-gray-400 leading-relaxed text-[11px]">
             1. Bonyeza kitufe cha **`+`** kilichopo chini.<br>
-            2. Piga/chagua picha, jina la bidhaa, hali yake (Mpya/Imetumika), na kama unakubali Swap.<br>
-            3. Weka namba yako ya WhatsApp kisha bonyeza **Tangaza Sasa**.<br>
-            4. Tangazo lako litaenda Live mara moja kwa kila mtu mtaani kwako!
+            2. Chagua picha, jina la bidhaa, Mkoa wako, na Mtaa/Wilaya.<br>
+            3. Weka namba yako ya WhatsApp kisha bonyeza **Tangaza Sasa**.
           </p>
         </div>
 
         <div class="bg-amber-950/40 p-3.5 rounded-2xl border border-amber-500/30 space-y-2">
-          <h4 class="font-bold text-amber-300 flex items-center gap-1.5 text-xs"><i class="ph ph-shield-check"></i> Kanuni za Kujilinda na Utapeli</h4>
-          <ul class="list-disc list-inside text-amber-200/80 space-y-1 text-[11px] leading-relaxed">
-            <li>**Usitume pesa ya advance** kabla hujaona na kushika bidhaa.</li>
-            <li>Kutana na muuzaji sehemu yenye watu au ya wazi (sokoni, kituo cha basi).</li>
-            <li>Kagua vifaa vya elektroniki (kama simu au TV) ukiwa hapo hapo kabla ya kuondoka.</li>
+          <h4 class="font-bold text-amber-300 text-xs">🛡️ Kanuni za Usalama</h4>
+          <ul class="list-disc list-inside text-amber-200/80 space-y-1 text-[11px]">
+            <li>Usitume pesa ya advance kabla hujaona na kukagua bidhaa.</li>
+            <li>Kutana na muuzaji sehemu yenye watu au ya wazi.</li>
           </ul>
-        </div>
-
-        <div class="text-center pt-2 border-t border-gray-800">
-          <p class="text-[11px] text-gray-500">MtaaX System • Designed & Developed by <span class="text-mtaa-400 font-semibold">bin_nazir</span></p>
         </div>
       </div>
     </div>
@@ -363,7 +297,7 @@
     <div class="modal-overlay absolute inset-0" id="postModalOverlay"></div>
     <div class="absolute bottom-0 left-0 right-0 bg-gray-900 rounded-t-3xl max-h-[90vh] overflow-y-auto animate-slide-up max-w-md mx-auto">
       <div class="sticky top-0 bg-gray-900/95 backdrop-blur z-10 px-4 py-3 flex items-center justify-between border-b border-gray-800">
-        <h3 class="font-bold text-sm text-white flex items-center gap-1.5"><i class="ph ph-plus-circle text-mtaa-400"></i> Tangaza Bidhaa / Story Mtaani</h3>
+        <h3 class="font-bold text-sm text-white flex items-center gap-1.5"><i class="ph ph-plus-circle text-mtaa-400"></i> Tangaza Bidhaa Soko la Mtaani</h3>
         <button id="closePostModal" class="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
           <i class="ph ph-x text-gray-400"></i>
         </button>
@@ -423,6 +357,17 @@
 
         <div class="grid grid-cols-2 gap-2">
           <div>
+            <label class="block text-[11px] text-gray-400 mb-1">Mkoa</label>
+            <select id="postRegion" required class="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"></select>
+          </div>
+          <div>
+            <label class="block text-[11px] text-gray-400 mb-1">Wilaya / Mtaa</label>
+            <input type="text" id="postDistrict" required placeholder="mfano: Kinondoni / Area C" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
             <label class="block text-[11px] text-gray-400 mb-1">Kategoria</label>
             <select id="postCategory" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
               <option value="Elektroniki">Elektroniki</option>
@@ -433,30 +378,19 @@
             </select>
           </div>
           <div>
-            <label class="block text-[11px] text-gray-400 mb-1">Mtaa / Eneo</label>
-            <select id="postNeighborhood" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
-              <option value="Area C">Area C</option>
-              <option value="Majengo">Majengo</option>
-              <option value="Nzuguni">Nzuguni</option>
-              <option value="Ipagala">Ipagala</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
             <label class="block text-[11px] text-gray-400 mb-1">Jina Lako / Duka</label>
             <input type="text" id="postSeller" required placeholder="Juma M." class="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
-          </div>
-          <div>
-            <label class="block text-[11px] text-gray-400 mb-1">Namba ya WhatsApp</label>
-            <input type="tel" id="postPhone" required placeholder="0755xxxxxx" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
           </div>
         </div>
 
         <div>
+          <label class="block text-[11px] text-gray-400 mb-1">Namba ya WhatsApp</label>
+          <input type="tel" id="postPhone" required placeholder="0755xxxxxx" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+        </div>
+
+        <div>
           <label class="block text-[11px] text-gray-400 mb-1">Maelezo Fupi</label>
-          <textarea id="postDescription" rows="2" placeholder="Eleza hali ya kifaa, sababu ya kuuza au swap..." class="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"></textarea>
+          <textarea id="postDescription" rows="2" placeholder="Eleza hali ya kifaa..." class="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"></textarea>
         </div>
 
         <button type="submit" id="submitAdBtn" class="w-full bg-gradient-to-r from-mtaa-500 to-emerald-400 hover:from-mtaa-400 hover:to-emerald-300 text-gray-950 font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-mtaa-500/20 active:scale-95 transition-all">
@@ -464,6 +398,29 @@
           <span>Tangaza Sasa Soko la Mtaani</span>
         </button>
       </form>
+    </div>
+  </div>
+
+  <!-- Seller Profile Modal -->
+  <div id="sellerProfileModal" class="fixed inset-0 z-50 hidden">
+    <div class="modal-overlay absolute inset-0" onclick="closeSellerProfileModal()"></div>
+    <div class="absolute bottom-0 left-0 right-0 bg-gray-900 rounded-t-3xl max-h-[90vh] overflow-y-auto animate-slide-up max-w-md mx-auto p-4 space-y-4">
+      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-10 h-10 bg-mtaa-800 text-mtaa-300 rounded-full flex items-center justify-center font-bold text-lg">
+            <i class="ph ph-storefront"></i>
+          </div>
+          <div>
+            <h3 id="sellerProfileName" class="font-bold text-white text-sm flex items-center gap-1"></h3>
+            <p id="sellerProfileLocation" class="text-[10px] text-gray-400"></p>
+          </div>
+        </div>
+        <button onclick="closeSellerProfileModal()" class="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center text-gray-400">
+          <i class="ph ph-x"></i>
+        </button>
+      </div>
+      <h4 class="font-bold text-xs text-gray-400 uppercase">Matangazo Yote ya Muuzaji Huyu</h4>
+      <div id="sellerProfileProductsList" class="grid grid-cols-2 gap-2.5"></div>
     </div>
   </div>
 
@@ -498,7 +455,6 @@
             </div>
           </div>
 
-          <!-- Trust Score Meter Bar -->
           <div class="bg-gray-800/80 p-3 rounded-xl border border-gray-700/60 space-y-1.5">
             <div class="flex items-center justify-between text-xs">
               <span class="font-semibold text-gray-300 flex items-center gap-1">
@@ -515,7 +471,6 @@
             </div>
           </div>
 
-          <!-- Interactive Likes & Dislikes Buttons -->
           <div class="grid grid-cols-2 gap-3">
             <button id="likeBtn" class="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-mtaa-950/80 border border-mtaa-500/50 text-mtaa-300 hover:bg-mtaa-900 transition-all active:scale-95 shadow-lg shadow-mtaa-950">
               <i class="ph-fill ph-thumbs-up text-lg text-mtaa-400"></i>
@@ -527,14 +482,14 @@
             </button>
           </div>
 
-          <div class="bg-gray-800/50 p-3 rounded-xl flex items-center justify-between text-xs border border-gray-700/50">
+          <div class="bg-gray-800/50 p-3 rounded-xl flex items-center justify-between text-xs border border-gray-700/50 cursor-pointer" onclick="openSellerProfileFromModal()">
             <div class="flex items-center gap-2">
               <div class="w-9 h-9 bg-mtaa-800 text-mtaa-300 rounded-full flex items-center justify-center font-bold">
                 <i class="ph ph-storefront text-lg"></i>
               </div>
               <div>
-                <p id="detailSeller" class="font-bold text-white"></p>
-                <p class="text-[10px] text-gray-400">Muuzaji Mtaani</p>
+                <p id="detailSeller" class="font-bold text-white flex items-center gap-1"></p>
+                <p class="text-[10px] text-mtaa-400 font-medium">Tazama Duka la Muuzaji ➔</p>
               </div>
             </div>
             <button id="shareAdBtn" class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-2.5 py-1.5 rounded-lg text-xs flex items-center gap-1 transition-colors">
@@ -547,7 +502,6 @@
             <p id="detailDescription" class="text-xs text-gray-300 leading-relaxed bg-gray-800/30 p-3 rounded-xl border border-gray-800"></p>
           </div>
 
-          <!-- Owner Security Controls (Visible ONLY to creator) -->
           <div id="ownerControls" class="hidden bg-mtaa-950/60 border border-mtaa-500/40 p-3 rounded-xl space-y-2">
             <p class="text-[10px] text-mtaa-300 font-bold flex items-center gap-1">
               <i class="ph ph-shield-check"></i> Tangazo hili ni Lako! Una uwezo wa kulisimamia:
@@ -562,7 +516,6 @@
             </div>
           </div>
 
-          <!-- Direct Contact Action Buttons -->
           <div class="grid grid-cols-2 gap-3 pt-2">
             <a id="whatsappBtn" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/40">
               <i class="ph-fill ph-whatsapp-logo text-lg"></i>
@@ -578,15 +531,20 @@
     </div>
   </div>
 
-  <!-- Toast Notification -->
+  <!-- Toast -->
   <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-mtaa-300 border border-mtaa-500/50 px-4 py-2.5 rounded-full text-xs font-semibold shadow-2xl hidden flex items-center gap-2 animate-fade-in">
     <i class="ph-fill ph-check-circle text-base"></i>
     <span id="toastMessage">Message...</span>
   </div>
 
   <script type="module">
-    
-    // Dynamic Firebase Loader
+    const TANZANIA_REGIONS = [
+      "Arusha", "Dar es Salaam", "Dodoma", "Geita", "Iringa", "Kagera", "Katavi", "Kigoma",
+      "Kilimanjaro", "Lindi", "Manyara", "Mara", "Mbeya", "Morogoro", "Mtwara", "Mwanza",
+      "Njombe", "Pemba Kaskazini", "Pemba Kusini", "Pwani", "Rukwa", "Ruvuma", "Shinyanga",
+      "Simiyu", "Singida", "Songwe", "Tabora", "Tanga", "Zanzibar Mjini Magharibi", "Zanzibar Kaskazini", "Zanzibar Kusini"
+    ];
+
     let initializeApp, getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged;
     let getFirestore, collection, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot;
     let firebaseLoaded = false;
@@ -597,20 +555,10 @@
         const authMod = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js");
         const dbMod = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
         
-        initializeApp = appMod.initializeApp;
-        getAuth = authMod.getAuth;
-        signInAnonymously = authMod.signInAnonymously;
-        signInWithCustomToken = authMod.signInWithCustomToken;
-        onAuthStateChanged = authMod.onAuthStateChanged;
-        
-        getFirestore = dbMod.getFirestore;
-        collection = dbMod.collection;
-        doc = dbMod.doc;
-        setDoc = dbMod.setDoc;
-        getDoc = dbMod.getDoc;
-        updateDoc = dbMod.updateDoc;
-        deleteDoc = dbMod.deleteDoc;
-        onSnapshot = dbMod.onSnapshot;
+        initializeApp = appMod.initializeApp; getAuth = authMod.getAuth; signInAnonymously = authMod.signInAnonymously;
+        signInWithCustomToken = authMod.signInWithCustomToken; onAuthStateChanged = authMod.onAuthStateChanged;
+        getFirestore = dbMod.getFirestore; collection = dbMod.collection; doc = dbMod.doc;
+        setDoc = dbMod.setDoc; getDoc = dbMod.getDoc; updateDoc = dbMod.updateDoc; deleteDoc = dbMod.deleteDoc; onSnapshot = dbMod.onSnapshot;
 
         firebaseLoaded = true;
       } catch (e) {
@@ -621,14 +569,7 @@
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'mtaax-app';
     const firebaseConfig = typeof __firebase_config !== 'undefined' 
       ? (typeof __firebase_config === 'string' ? JSON.parse(__firebase_config) : __firebase_config)
-      : {
-        apiKey: "demo-api-key",
-        authDomain: "demo.firebaseapp.com",
-        projectId: "demo-project",
-        storageBucket: "demo.appspot.com",
-        messagingSenderId: "123456789",
-        appId: "1:123456789:web:abcdef"
-      };
+      : { apiKey: "demo", authDomain: "demo.firebaseapp.com", projectId: "demo", storageBucket: "demo.appspot.com", messagingSenderId: "123", appId: "1:123:web:123" };
 
     let app, auth, db;
 
@@ -640,253 +581,112 @@
           localStorage.setItem('mtaax_device_key', key);
         }
         return key;
-      } catch(e) {
-        return 'dev_' + Date.now();
-      }
+      } catch(e) { return 'dev_' + Date.now(); }
     }
 
     function loadStorage(key, fallback) {
-      try {
-        const val = localStorage.getItem(key);
-        return val ? JSON.parse(val) : fallback;
-      } catch(e) {
-        return fallback;
-      }
+      try { const val = localStorage.getItem(key); return val ? JSON.parse(val) : fallback; } catch(e) { return fallback; }
     }
-
     function saveStorage(key, data) {
-      try {
-        localStorage.setItem(key, JSON.stringify(data));
-      } catch(e) {
-        console.warn('Storage save failed:', e);
-      }
+      try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) { console.warn(e); }
     }
 
-    // Relative Time Helper (Swahili)
     function getTimeAgo(timestamp) {
       if (!timestamp) return 'Sasa hivi';
-      const now = Date.now();
-      const diffSec = Math.floor((now - timestamp) / 1000);
-
+      const diffSec = Math.floor((Date.now() - timestamp) / 1000);
       if (diffSec < 60) return 'Muda huu';
       const diffMin = Math.floor(diffSec / 60);
       if (diffMin < 60) return `Dakika ${diffMin} zilizopita`;
       const diffHours = Math.floor(diffMin / 60);
       if (diffHours < 24) return `Masaa ${diffHours} yaliyopita`;
-      const diffDays = Math.floor(diffHours / 24);
-      return `Siku ${diffDays} zilizopita`;
+      return `Siku ${Math.floor(diffHours / 24)} zilizopita`;
     }
 
-    // App State
     const AppState = {
-      currentUser: null,
-      deviceKey: getOrCreateDeviceKey(),
-      neighborhood: 'All Areas',
-      category: 'all',
-      searchQuery: '',
-      sortBy: 'newest',
-      currentTab: 'home',
-      products: [],
-      localProducts: loadStorage('mtaax_local_products', []),
-      favorites: loadStorage('mtaax_favs', []),
-      votedItems: loadStorage('mtaax_voted', {}),
-      selectedProduct: null,
-      isPosting: false
+      currentUser: null, deviceKey: getOrCreateDeviceKey(), region: 'Tanzania Nzima', category: 'all',
+      searchQuery: '', sortBy: 'newest', products: [], localProducts: loadStorage('mtaax_local_products', []),
+      favorites: loadStorage('mtaax_favs', []), votedItems: loadStorage('mtaax_voted', {}),
+      verifiedSellers: loadStorage('mtaax_verified_sellers', []), selectedProduct: null, isPosting: false
     };
 
-    // Default Initial Mock Data
     const MOCK_PRODUCTS = [
       {
-        id: 'p1',
-        title: 'Samsung Galaxy A54 5G 128GB',
-        price: 450000,
-        negotiable: 'Maongezi Yapoyapo',
-        category: 'Elektroniki',
-        neighborhood: 'Area C',
-        seller: 'Juma M.',
-        phone: '0755123456',
-        condition: 'Kama Mpya 🌟',
-        swap: 'SWAP OK 🔄',
-        description: 'Simu ipo katika hali nzuri sana. Haijawahi kufunguliwa, betri inakaa na chaji siku mbili. Inakubali swap na iPhone.',
-        image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500&auto=format&fit=crop&q=60',
-        likes: 12,
-        dislikes: 1,
-        status: 'active',
-        deviceKey: 'mock_owner',
-        createdAt: Date.now() - 1800000
+        id: 'p1', title: 'Samsung Galaxy A54 5G 128GB', price: 450000, negotiable: 'Maongezi Yapoyapo', category: 'Elektroniki',
+        region: 'Dodoma', district: 'Area C', seller: 'Juma M.', phone: '0755123456', condition: 'Kama Mpya 🌟', swap: 'SWAP OK 🔄',
+        description: 'Simu ipo katika hali nzuri sana. Haijawahi kufunguliwa, betri inakaa siku mbili.',
+        image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500&auto=format&fit=crop&q=60', likes: 12, dislikes: 1, status: 'active', deviceKey: 'mock_owner', createdAt: Date.now() - 1800000
       },
       {
-        id: 'p2',
-        title: 'Meza ya Mbao ya Sebule (Coffee Table)',
-        price: 85000,
-        negotiable: 'Bei ya Mwisho',
-        category: 'Samani',
-        neighborhood: 'Majengo',
-        seller: 'Mama Anna',
-        phone: '0712987654',
-        condition: 'Mpya Kapisa ✨',
-        swap: 'No Swap 🛑',
-        description: 'Meza imara sana ya mbao ya mninga. Haina shida yoyote, inauzwa kwa kuhamisha mtaa.',
-        image: 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=500&auto=format&fit=crop&q=60',
-        likes: 8,
-        dislikes: 0,
-        status: 'active',
-        deviceKey: 'mock_owner',
-        createdAt: Date.now() - 3600000
-      },
-      {
-        id: 'p3',
-        title: 'LG Smart TV 43 Inch 4K',
-        price: 520000,
-        negotiable: 'Maongezi Yapoyapo',
-        category: 'Elektroniki',
-        neighborhood: 'Nzuguni',
-        seller: 'Kaka Baraka',
-        phone: '0688334455',
-        condition: 'Kama Mpya 🌟',
-        swap: 'SWAP OK 🔄',
-        description: 'TV inafanya kazi vizuri, inakubali YouTube na Netflix. Inakuja na remote yake original.',
-        image: 'https://images.unsplash.com/photo-1593784991095-a205069470b6?w=500&auto=format&fit=crop&q=60',
-        likes: 15,
-        dislikes: 2,
-        status: 'active',
-        deviceKey: 'mock_owner',
-        createdAt: Date.now() - 7200000
-      },
-      {
-        id: 'p4',
-        title: 'Pikipiki Toyo 150cc',
-        price: 1800000,
-        negotiable: 'Maongezi Yapoyapo',
-        category: 'Magari',
-        neighborhood: 'Ipagala',
-        seller: 'Omary Bodaboda',
-        phone: '0767112233',
-        condition: 'Imetumika 📱',
-        swap: 'No Swap 🛑',
-        description: 'Pikipiki bado mpya, haina matatizo yoyote. Kadi ipo na bima bado ipo hai.',
-        image: 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=500&auto=format&fit=crop&q=60',
-        likes: 20,
-        dislikes: 1,
-        status: 'active',
-        deviceKey: 'mock_owner',
-        createdAt: Date.now() - 10800000
+        id: 'p2', title: 'Meza ya Mbao ya Sebule', price: 85000, negotiable: 'Bei ya Mwisho', category: 'Samani',
+        region: 'Dar es Salaam', district: 'Kinondoni', seller: 'Mama Anna', phone: '0712987654', condition: 'Mpya Kapisa ✨', swap: 'No Swap 🛑',
+        description: 'Meza imara sana ya mbao ya mninga.', image: 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=500&auto=format&fit=crop&q=60', likes: 8, dislikes: 0, status: 'active', deviceKey: 'mock_owner', createdAt: Date.now() - 3600000
       }
     ];
 
     const DOM = {
-      splashScreen: document.getElementById('splashScreen'),
-      neighborhoodBtn: document.getElementById('neighborhoodBtn'),
-      currentNeighborhood: document.getElementById('currentNeighborhood'),
-      neighborhoodDropdown: document.getElementById('neighborhoodDropdown'),
-      searchInput: document.getElementById('searchInput'),
-      clearSearchBtn: document.getElementById('clearSearchBtn'),
-      productList: document.getElementById('productList'),
-      favoritesList: document.getElementById('favoritesList'),
-      myProductsList: document.getElementById('myProductsList'),
-      productCountText: document.getElementById('productCountText'),
-      sortSelect: document.getElementById('sortSelect'),
-      favCount: document.getElementById('favCount'),
-      deviceIdDisplay: document.getElementById('deviceIdDisplay'),
-      homeView: document.getElementById('homeView'),
-      favoritesView: document.getElementById('favoritesView'),
-      profileView: document.getElementById('profileView'),
-      
-      helpBtn: document.getElementById('helpBtn'),
-      helpModal: document.getElementById('helpModal'),
-      helpModalOverlay: document.getElementById('helpModalOverlay'),
-      closeHelpModal: document.getElementById('closeHelpModal'),
-      
-      openPostModalBtn: document.getElementById('openPostModalBtn'),
-      postModal: document.getElementById('postModal'),
-      postModalOverlay: document.getElementById('postModalOverlay'),
-      closePostModal: document.getElementById('closePostModal'),
-      postForm: document.getElementById('postForm'),
-      imageInput: document.getElementById('imageInput'),
-      imagePreview: document.getElementById('imagePreview'),
-      previewImg: document.getElementById('previewImg'),
-      uploadLabel: document.getElementById('uploadLabel'),
-      submitAdBtn: document.getElementById('submitAdBtn'),
-
-      detailsModal: document.getElementById('detailsModal'),
-      detailsModalOverlay: document.getElementById('detailsModalOverlay'),
-      closeDetailsModal: document.getElementById('closeDetailsModal'),
-      detailImg: document.getElementById('detailImg'),
-      detailBadge: document.getElementById('detailBadge'),
-      detailConditionBadge: document.getElementById('detailConditionBadge'),
-      detailSwapBadge: document.getElementById('detailSwapBadge'),
-      detailTitle: document.getElementById('detailTitle'),
-      detailLocation: document.getElementById('detailLocation'),
-      detailTimeAgo: document.getElementById('detailTimeAgo'),
-      detailPrice: document.getElementById('detailPrice'),
-      detailNegotiable: document.getElementById('detailNegotiable'),
-      trustPercentText: document.getElementById('trustPercentText'),
-      trustBarFill: document.getElementById('trustBarFill'),
-      likeCountDetail: document.getElementById('likeCountDetail'),
-      dislikeCountDetail: document.getElementById('dislikeCountDetail'),
-      likeBtn: document.getElementById('likeBtn'),
-      dislikeBtn: document.getElementById('dislikeBtn'),
-      detailSeller: document.getElementById('detailSeller'),
-      detailDescription: document.getElementById('detailDescription'),
-      whatsappBtn: document.getElementById('whatsappBtn'),
-      callBtn: document.getElementById('callBtn'),
-      shareAdBtn: document.getElementById('shareAdBtn'),
-      ownerControls: document.getElementById('ownerControls'),
-      markSoldBtn: document.getElementById('markSoldBtn'),
-      deleteAdBtn: document.getElementById('deleteAdBtn'),
-
-      toast: document.getElementById('toast'),
+      splashScreen: document.getElementById('splashScreen'), regionBtn: document.getElementById('regionBtn'),
+      currentRegion: document.getElementById('currentRegion'), regionDropdown: document.getElementById('regionDropdown'),
+      regionOptionList: document.getElementById('regionOptionList'), searchInput: document.getElementById('searchInput'),
+      clearSearchBtn: document.getElementById('clearSearchBtn'), productList: document.getElementById('productList'),
+      favoritesList: document.getElementById('favoritesList'), myProductsList: document.getElementById('myProductsList'),
+      productCountText: document.getElementById('productCountText'), sortSelect: document.getElementById('sortSelect'),
+      favCount: document.getElementById('favCount'), deviceIdDisplay: document.getElementById('deviceIdDisplay'),
+      homeView: document.getElementById('homeView'), favoritesView: document.getElementById('favoritesView'),
+      profileView: document.getElementById('profileView'), helpBtn: document.getElementById('helpBtn'),
+      helpModal: document.getElementById('helpModal'), closeHelpModal: document.getElementById('closeHelpModal'),
+      openPostModalBtn: document.getElementById('openPostModalBtn'), postModal: document.getElementById('postModal'),
+      closePostModal: document.getElementById('closePostModal'), postForm: document.getElementById('postForm'),
+      postRegion: document.getElementById('postRegion'), imageInput: document.getElementById('imageInput'),
+      imagePreview: document.getElementById('imagePreview'), previewImg: document.getElementById('previewImg'),
+      uploadLabel: document.getElementById('uploadLabel'), submitAdBtn: document.getElementById('submitAdBtn'),
+      detailsModal: document.getElementById('detailsModal'), closeDetailsModal: document.getElementById('closeDetailsModal'),
+      detailImg: document.getElementById('detailImg'), detailBadge: document.getElementById('detailBadge'),
+      detailConditionBadge: document.getElementById('detailConditionBadge'), detailSwapBadge: document.getElementById('detailSwapBadge'),
+      detailTitle: document.getElementById('detailTitle'), detailLocation: document.getElementById('detailLocation'),
+      detailTimeAgo: document.getElementById('detailTimeAgo'), detailPrice: document.getElementById('detailPrice'),
+      detailNegotiable: document.getElementById('detailNegotiable'), trustPercentText: document.getElementById('trustPercentText'),
+      trustBarFill: document.getElementById('trustBarFill'), likeCountDetail: document.getElementById('likeCountDetail'),
+      dislikeCountDetail: document.getElementById('dislikeCountDetail'), likeBtn: document.getElementById('likeBtn'),
+      dislikeBtn: document.getElementById('dislikeBtn'), detailSeller: document.getElementById('detailSeller'),
+      detailDescription: document.getElementById('detailDescription'), whatsappBtn: document.getElementById('whatsappBtn'),
+      callBtn: document.getElementById('callBtn'), shareAdBtn: document.getElementById('shareAdBtn'),
+      ownerControls: document.getElementById('ownerControls'), markSoldBtn: document.getElementById('markSoldBtn'),
+      deleteAdBtn: document.getElementById('deleteAdBtn'), toast: document.getElementById('toast'),
       toastMessage: document.getElementById('toastMessage')
     };
 
-    function forceDismissSplash() {
-      if (DOM.splashScreen) {
-        DOM.splashScreen.style.opacity = '0';
-        DOM.splashScreen.style.transition = 'opacity 0.3s ease';
-        setTimeout(() => {
-          DOM.splashScreen.style.display = 'none';
-          DOM.splashScreen.style.pointerEvents = 'none';
-        }, 300);
-      }
+    function populateRegionOptions() {
+      let html = `<button class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-mtaa-900 text-gray-300 hover:text-mtaa-300 region-opt" data-value="Tanzania Nzima">Tanzania Nzima (All)</button>`;
+      TANZANIA_REGIONS.forEach(reg => {
+        html += `<button class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-mtaa-900 text-gray-300 hover:text-mtaa-300 region-opt" data-value="${reg}">📍 ${reg}</button>`;
+      });
+      if (DOM.regionOptionList) DOM.regionOptionList.innerHTML = html;
+
+      let postHtml = `<option value="">Chagua Mkoa</option>`;
+      TANZANIA_REGIONS.forEach(reg => { postHtml += `<option value="${reg}">${reg}</option>`; });
+      if (DOM.postRegion) DOM.postRegion.innerHTML = postHtml;
     }
 
     const initApp = async () => {
-      forceDismissSplash();
-
-      if (DOM.deviceIdDisplay) {
-        DOM.deviceIdDisplay.textContent = AppState.deviceKey.substr(0, 14) + '...';
-      }
+      populateRegionOptions();
+      if (DOM.deviceIdDisplay) DOM.deviceIdDisplay.textContent = AppState.deviceKey.substr(0, 14) + '...';
 
       const localP = AppState.localProducts || [];
       const localIds = new Set(localP.map(p => p.id));
-      const combined = [...localP, ...MOCK_PRODUCTS.filter(m => !localIds.has(m.id))];
-      AppState.products = combined;
+      AppState.products = [...localP, ...MOCK_PRODUCTS.filter(m => !localIds.has(m.id))];
 
       renderApp();
-
       await loadFirebase();
 
       if (firebaseLoaded) {
         try {
-          app = initializeApp(firebaseConfig);
-          auth = getAuth(app);
-          db = getFirestore(app);
-
+          app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app);
           if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
             await signInWithCustomToken(auth, __initial_auth_token);
-          } else {
-            await signInAnonymously(auth);
-          }
-
-          onAuthStateChanged(auth, (user) => {
-            AppState.currentUser = user;
-            setupRealtimeSync();
-          });
-        } catch (err) {
-          console.warn("Firebase Auth Init Fallback:", err);
-        }
+          } else { await signInAnonymously(auth); }
+          onAuthStateChanged(auth, (user) => { AppState.currentUser = user; setupRealtimeSync(); });
+        } catch (err) { console.warn(err); }
       }
-
       setupEventListeners();
     };
 
@@ -901,209 +701,69 @@
 
     function setupRealtimeSync() {
       if (!AppState.currentUser || !db || !firebaseLoaded) return;
-
       try {
         const listingsRef = collection(db, 'artifacts', appId, 'public', 'data', 'listings');
-
         onSnapshot(listingsRef, (snapshot) => {
           const fetched = [];
-          snapshot.forEach(docSnap => {
-            fetched.push({ id: docSnap.id, ...docSnap.data() });
-          });
-
+          snapshot.forEach(docSnap => { fetched.push({ id: docSnap.id, ...docSnap.data() }); });
           const localP = AppState.localProducts || [];
           const fetchedIds = new Set(fetched.map(p => p.id));
           const uniqueLocals = localP.filter(l => !fetchedIds.has(l.id));
           const uniqueMocks = MOCK_PRODUCTS.filter(m => !fetchedIds.has(m.id) && !uniqueLocals.some(l => l.id === m.id));
-
           AppState.products = [...fetched, ...uniqueLocals, ...uniqueMocks];
           renderApp();
-        }, (err) => {
-          console.warn('Realtime sync fallback:', err);
-        });
-      } catch(e) {
-        console.warn('Realtime sync error:', e);
-      }
+        }, err => console.warn(err));
+      } catch(e) { console.warn(e); }
     }
 
-    function compressAndConvertImage(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const img = new Image();
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            let width = img.width;
-            let height = img.height;
-            const maxDim = 800;
-
-            if (width > height && width > maxDim) {
-              height = Math.round((height * maxDim) / width);
-              width = maxDim;
-            } else if (height > maxDim) {
-              width = Math.round((width * maxDim) / height);
-              height = maxDim;
-            }
-
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-            resolve(canvas.toDataURL('image/jpeg', 0.65));
-          };
-          img.onerror = () => resolve('https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=500&auto=format&fit=crop&q=60');
-          img.src = e.target.result;
-        };
-        reader.onerror = () => resolve('https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=500&auto=format&fit=crop&q=60');
-        reader.readAsDataURL(file);
-      });
-    }
-
-    function renderApp() {
-      renderProducts();
-      renderFavorites();
-      renderMyProducts();
-    }
-
-    function renderStories() {
-      if (!DOM.storiesContainer) return;
-
-      let html = `
-        <div id="addStoryBtn" class="flex-shrink-0 flex flex-col items-center cursor-pointer group">
-          <div class="w-14 h-14 bg-mtaa-950 border-2 border-dashed border-mtaa-400 rounded-full flex items-center justify-center text-mtaa-400 group-hover:scale-105 transition-transform shadow-lg">
-            <i class="ph ph-plus text-xl"></i>
-          </div>
-          <span class="text-[10px] text-mtaa-300 font-semibold mt-1">+ Story</span>
-        </div>
-      `;
-
-      const storyProducts = AppState.products.slice(0, 8);
-      storyProducts.forEach(prod => {
-        html += `
-          <div class="story-bubble flex-shrink-0 flex flex-col items-center cursor-pointer group" data-id="${prod.id}">
-            <div class="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-mtaa-500 to-emerald-300 group-hover:scale-105 transition-transform shadow-lg">
-              <img src="${prod.image}" class="w-full h-full rounded-full object-cover" onerror="this.src='https://placehold.co/100x100/16a34a/ffffff?text=MtaaX'">
-            </div>
-            <span class="text-[10px] text-gray-300 font-medium mt-1 truncate w-14 text-center">${prod.title}</span>
-          </div>
-        `;
-      });
-
-      DOM.storiesContainer.innerHTML = html;
-
-      document.getElementById('addStoryBtn')?.addEventListener('click', () => {
-        openPostModal('story');
-      });
-
-      document.querySelectorAll('.story-bubble').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.getAttribute('data-id');
-          const prod = AppState.products.find(p => p.id === id);
-          if (prod) openDetailsModal(prod);
-        });
-      });
-    }
+    function renderApp() { renderProducts(); renderFavorites(); renderMyProducts(); }
 
     function renderProducts() {
       if (!DOM.productList) return;
-
       let filtered = AppState.products.filter(p => p.status === 'active');
-
-      if (AppState.neighborhood !== 'All Areas') {
-        filtered = filtered.filter(p => p.neighborhood === AppState.neighborhood);
-      }
-
-      if (AppState.category !== 'all') {
-        filtered = filtered.filter(p => p.category === AppState.category);
-      }
-
+      if (AppState.region !== 'Tanzania Nzima') filtered = filtered.filter(p => p.region === AppState.region);
+      if (AppState.category !== 'all') filtered = filtered.filter(p => p.category === AppState.category);
       if (AppState.searchQuery.trim() !== '') {
         const q = AppState.searchQuery.toLowerCase();
-        filtered = filtered.filter(p => 
-          p.title.toLowerCase().includes(q) || 
-          (p.description && p.description.toLowerCase().includes(q)) ||
-          (p.seller && p.seller.toLowerCase().includes(q))
-        );
+        filtered = filtered.filter(p => p.title.toLowerCase().includes(q) || (p.description && p.description.toLowerCase().includes(q)) || (p.seller && p.seller.toLowerCase().includes(q)));
       }
 
-      if (AppState.sortBy === 'price-low') {
-        filtered.sort((a, b) => a.price - b.price);
-      } else if (AppState.sortBy === 'price-high') {
-        filtered.sort((a, b) => b.price - a.price);
-      } else if (AppState.sortBy === 'trust') {
-        filtered.sort((a, b) => (b.likes || 0) - (a.likes || 0));
-      } else {
-        filtered.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-      }
-
-      if (DOM.productCountText) {
-        DOM.productCountText.textContent = `${filtered.length} Bidhaa Zimepatikana`;
-      }
-
-      if (filtered.length === 0) {
-        DOM.productList.innerHTML = `
-          <div class="col-span-2 text-center py-12 space-y-2 bg-gray-900/50 rounded-2xl border border-gray-800">
-            <i class="ph ph-shopping-bag-open text-4xl text-gray-600"></i>
-            <p class="text-xs text-gray-400">Hakuna bidhaa zilizopatikana kwa sasa.</p>
-            <button id="emptyPostBtn" class="text-xs text-mtaa-400 font-bold underline">
-              Kuwa wa kwanza kutangaza mtaani!
-            </button>
-          </div>
-        `;
-        document.getElementById('emptyPostBtn')?.addEventListener('click', () => openPostModal('ad'));
-        return;
-      }
+      if (DOM.productCountText) DOM.productCountText.textContent = `${filtered.length} Bidhaa Zimepatikana`;
 
       let html = '';
       filtered.forEach(p => {
         const isFav = AppState.favorites.includes(p.id);
         const totalVotes = (p.likes || 0) + (p.dislikes || 0);
         const trustPercent = totalVotes > 0 ? Math.round(((p.likes || 0) / totalVotes) * 100) : 100;
-        const timeAgoStr = getTimeAgo(p.createdAt);
+        const isVerified = AppState.verifiedSellers.includes(p.seller);
 
         html += `
           <div class="glass-card rounded-xl overflow-hidden shadow-lg hover:border-mtaa-500/50 transition-all product-card cursor-pointer flex flex-col justify-between" data-id="${p.id}">
             <div>
               <div class="relative h-32 sm:h-36 bg-gray-900">
-                <img src="${p.image}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300/16a34a/ffffff?text=MtaaX+Market'">
-                
+                <img src="${p.image}" class="w-full h-full object-cover">
                 <div class="absolute top-1.5 left-1.5 flex flex-wrap items-center gap-1 max-w-[85%]">
                   <span class="bg-gray-950/85 backdrop-blur text-mtaa-300 text-[9px] font-bold px-1.5 py-0.5 rounded-md border border-mtaa-500/30 truncate">
-                    📍 ${p.neighborhood}
+                    📍 ${p.region || 'TZZ'}
                   </span>
-                  ${p.swap && p.swap.includes('SWAP OK') ? `
-                    <span class="bg-indigo-600 text-white text-[8px] font-extrabold px-1 py-0.5 rounded-md shadow">
-                      SWAP 🔄
-                    </span>
-                  ` : ''}
                 </div>
-
-                <button class="fav-btn absolute top-1.5 right-1.5 w-7 h-7 bg-gray-950/80 backdrop-blur rounded-full flex items-center justify-center transition-transform active:scale-90" data-id="${p.id}">
+                <button class="fav-btn absolute top-1.5 right-1.5 w-7 h-7 bg-gray-950/80 backdrop-blur rounded-full flex items-center justify-center" data-id="${p.id}">
                   <i class="${isFav ? 'ph-fill ph-heart text-rose-500' : 'ph ph-heart text-white'} text-sm"></i>
                 </button>
               </div>
 
               <div class="p-2.5 space-y-1">
-                <h3 class="font-bold text-xs text-white line-clamp-1 leading-snug">${p.title}</h3>
+                <h3 class="font-bold text-xs text-white line-clamp-1 leading-snug flex items-center gap-1">
+                  ${p.title} ${isVerified ? '<i class="ph-fill ph-seal-check text-mtaa-400"></i>' : ''}
+                </h3>
                 <p class="text-xs font-extrabold text-mtaa-400">TZS ${Number(p.price).toLocaleString()}</p>
-
-                <div class="flex items-center justify-between text-[9px] text-gray-400 pt-0.5">
-                  <span class="text-mtaa-300 font-semibold truncate max-w-[60%]">${p.condition || 'Kama Mpya'}</span>
-                  <span>⏱️ ${timeAgoStr}</span>
-                </div>
               </div>
             </div>
 
             <div class="p-2 pt-0">
-              <div class="flex items-center justify-between text-[9px] pt-1 border-t border-gray-800/80">
-                <div class="flex items-center gap-1">
-                  <span class="text-mtaa-400 font-bold">👍 ${p.likes || 0}</span>
-                  <span class="text-gray-600">|</span>
-                  <span class="text-rose-400 font-bold">👎 ${p.dislikes || 0}</span>
-                </div>
-                <span class="font-mono text-[8px] bg-mtaa-950 text-mtaa-300 px-1 py-0.2 rounded border border-mtaa-500/30">
-                  ${trustPercent}% Trust
-                </span>
+              <div class="flex items-center justify-between text-[8px] pt-1 border-t border-gray-800/80">
+                <span class="text-mtaa-400 font-bold">👍 ${p.likes || 0}</span>
+                <span class="font-mono text-[8px] bg-mtaa-950 text-mtaa-300 px-1 py-0.2 rounded border border-mtaa-500/30">${trustPercent}% Trust</span>
               </div>
             </div>
           </div>
@@ -1124,375 +784,147 @@
       document.querySelectorAll('.fav-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
-          const id = btn.getAttribute('data-id');
-          toggleFavorite(id);
+          toggleFavorite(btn.getAttribute('data-id'));
         });
       });
     }
 
     function toggleFavorite(id) {
-      const index = AppState.favorites.indexOf(id);
-      if (index >= 0) {
-        AppState.favorites.splice(index, 1);
-        showToast('Imeondolewa kwenye Favorites');
-      } else {
-        AppState.favorites.push(id);
-        showToast('Imehifadhiwa kwenye Favorites ❤️');
-      }
+      const idx = AppState.favorites.indexOf(id);
+      if (idx >= 0) AppState.favorites.splice(idx, 1);
+      else AppState.favorites.push(id);
       saveStorage('mtaax_favs', AppState.favorites);
       renderApp();
     }
 
     function renderFavorites() {
-      if (!DOM.favoritesList || !DOM.favCount) return;
-
+      if (!DOM.favoritesList) return;
       DOM.favCount.textContent = AppState.favorites.length;
-      const favProducts = AppState.products.filter(p => AppState.favorites.includes(p.id));
-
-      if (favProducts.length === 0) {
-        DOM.favoritesList.innerHTML = `
-          <div class="text-center py-12 text-gray-500 text-xs">
-            <i class="ph ph-heart text-3xl mb-2 text-gray-600 block"></i>
-            Hujaweka bidhaa yoyote kwenye favorites.
-          </div>
-        `;
-        return;
-      }
-
+      const favs = AppState.products.filter(p => AppState.favorites.includes(p.id));
       let html = '';
-      favProducts.forEach(p => {
+      favs.forEach(p => {
         html += `
           <div class="glass-card rounded-xl p-3 flex items-center gap-3 product-card cursor-pointer" data-id="${p.id}">
-            <img src="${p.image}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0">
+            <img src="${p.image}" class="w-16 h-16 rounded-lg object-cover">
             <div class="flex-1 min-w-0">
               <h4 class="font-bold text-xs text-white truncate">${p.title}</h4>
-              <p class="text-xs font-bold text-mtaa-400 mt-0.5">TZS ${Number(p.price).toLocaleString()}</p>
-              <p class="text-[10px] text-gray-400">📍 ${p.neighborhood}</p>
+              <p class="text-xs font-bold text-mtaa-400">TZS ${Number(p.price).toLocaleString()}</p>
             </div>
-            <button class="fav-btn p-2 text-rose-500 hover:text-rose-400" data-id="${p.id}">
-              <i class="ph-fill ph-heart text-lg"></i>
-            </button>
           </div>
         `;
       });
-
-      DOM.favoritesList.innerHTML = html;
+      DOM.favoritesList.innerHTML = html || `<p class="text-center text-xs text-gray-500 py-6">Hakuna favorites bado.</p>`;
     }
 
     function renderMyProducts() {
       if (!DOM.myProductsList) return;
-
       const myProds = AppState.products.filter(p => p.deviceKey === AppState.deviceKey);
-
-      if (myProds.length === 0) {
-        DOM.myProductsList.innerHTML = `
-          <p class="text-center py-6 text-xs text-gray-500">Hujatangaza bidhaa yoyote bado kutoka kwenye simu hii.</p>
-        `;
-        return;
-      }
-
       let html = '';
       myProds.forEach(p => {
         html += `
-          <div class="bg-gray-900 border border-gray-800 rounded-xl p-3 flex items-center justify-between gap-2">
-            <div class="flex items-center gap-2.5 min-w-0">
-              <img src="${p.image}" class="w-12 h-12 rounded-lg object-cover flex-shrink-0">
-              <div class="min-w-0">
+          <div class="bg-gray-900 border border-gray-800 rounded-xl p-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <img src="${p.image}" class="w-10 h-10 rounded object-cover">
+              <div>
                 <h5 class="font-bold text-xs text-white truncate">${p.title}</h5>
                 <p class="text-xs font-bold text-mtaa-400">TZS ${Number(p.price).toLocaleString()}</p>
-                <span class="text-[9px] px-1.5 py-0.2 rounded font-semibold ${p.status === 'sold' ? 'bg-amber-950 text-amber-300' : 'bg-mtaa-950 text-mtaa-300'}">
-                  ${p.status === 'sold' ? 'IMEUZWA' : 'LIVE'}
-                </span>
               </div>
             </div>
-            <button onclick="openDetailsModalById('${p.id}')" class="bg-gray-800 hover:bg-gray-700 text-xs px-2.5 py-1.5 rounded-lg text-mtaa-300">
-              Simamia
-            </button>
           </div>
         `;
       });
-
-      DOM.myProductsList.innerHTML = html;
+      DOM.myProductsList.innerHTML = html || `<p class="text-center text-xs text-gray-500 py-4">Hujatangaza bidhaa bado.</p>`;
     }
 
-    window.openDetailsModalById = function(id) {
+    function openDetailsModal(prod) {
+      AppState.selectedProduct = prod;
+      if (DOM.detailImg) DOM.detailImg.src = prod.image;
+      if (DOM.detailTitle) DOM.detailTitle.textContent = prod.title;
+      if (DOM.detailPrice) DOM.detailPrice.textContent = `TZS ${Number(prod.price).toLocaleString()}`;
+      if (DOM.detailSeller) {
+        const isVer = AppState.verifiedSellers.includes(prod.seller);
+        DOM.detailSeller.innerHTML = `${prod.seller} ${isVer ? '<i class="ph-fill ph-seal-check text-mtaa-400"></i>' : ''}`;
+      }
+
+      const cleanPhone = (prod.phone || '').replace(/[^0-9]/g, '');
+      const waPhone = cleanPhone.startsWith('0') ? '255' + cleanPhone.substring(1) : cleanPhone;
+      if (DOM.whatsappBtn) DOM.whatsappBtn.href = `https://wa.me/${waPhone}?text=Habari%20nimeona%20${encodeURIComponent(prod.title)}`;
+      if (DOM.callBtn) DOM.callBtn.href = `tel:${cleanPhone}`;
+
+      DOM.detailsModal?.classList.remove('hidden');
+    }
+
+    window.closeSellerProfileModal = () => document.getElementById('sellerProfileModal')?.classList.add('hidden');
+    window.openSellerProfileFromModal = () => {
+      if (!AppState.selectedProduct) return;
+      const sellerName = AppState.selectedProduct.seller;
+      const sellerProds = AppState.products.filter(p => p.seller === sellerName);
+
+      document.getElementById('sellerProfileName').innerHTML = `${sellerName} ${AppState.verifiedSellers.includes(sellerName) ? '<i class="ph-fill ph-seal-check text-mtaa-400"></i>' : ''}`;
+      document.getElementById('sellerProfileLocation').textContent = `📍 ${AppState.selectedProduct.region} • ${AppState.selectedProduct.district}`;
+
+      let html = '';
+      sellerProds.forEach(p => {
+        html += `
+          <div class="glass-card rounded-xl p-2 cursor-pointer" onclick="openDetailsModalById('${p.id}')">
+            <img src="${p.image}" class="w-full h-24 object-cover rounded-lg">
+            <h5 class="text-[11px] font-bold text-white truncate mt-1">${p.title}</h5>
+            <p class="text-[10px] text-mtaa-400 font-bold">TZS ${Number(p.price).toLocaleString()}</p>
+          </div>
+        `;
+      });
+      document.getElementById('sellerProfileProductsList').innerHTML = html;
+      DOM.detailsModal?.classList.add('hidden');
+      document.getElementById('sellerProfileModal')?.classList.remove('hidden');
+    };
+
+    window.openDetailsModalById = (id) => {
       const prod = AppState.products.find(p => p.id === id);
       if (prod) openDetailsModal(prod);
     };
 
-    function openDetailsModal(prod) {
-      AppState.selectedProduct = prod;
-
-      if (DOM.detailImg) DOM.detailImg.src = prod.image;
-      if (DOM.detailBadge) DOM.detailBadge.textContent = prod.category;
-      if (DOM.detailConditionBadge) DOM.detailConditionBadge.textContent = prod.condition || 'Kama Mpya 🌟';
-      if (DOM.detailSwapBadge) DOM.detailSwapBadge.textContent = prod.swap || 'No Swap 🛑';
-      if (DOM.detailTitle) DOM.detailTitle.textContent = prod.title;
-      if (DOM.detailLocation) DOM.detailLocation.querySelector('span').textContent = `${prod.neighborhood} • Muuzaji: ${prod.seller}`;
-      if (DOM.detailTimeAgo) DOM.detailTimeAgo.querySelector('span').textContent = `Iliwekwa ${getTimeAgo(prod.createdAt)}`;
-      if (DOM.detailPrice) DOM.detailPrice.textContent = `TZS ${Number(prod.price).toLocaleString()}`;
-      if (DOM.detailNegotiable) DOM.detailNegotiable.textContent = prod.negotiable || '';
-      if (DOM.detailSeller) DOM.detailSeller.textContent = prod.seller;
-      if (DOM.detailDescription) DOM.detailDescription.textContent = prod.description || 'Hakuna maelezo ya ziada.';
-
-      const likes = prod.likes || 0;
-      const dislikes = prod.dislikes || 0;
-      const total = likes + dislikes;
-      const percent = total > 0 ? Math.round((likes / total) * 100) : 100;
-
-      if (DOM.trustPercentText) DOM.trustPercentText.textContent = `${percent}% Trust Score`;
-      if (DOM.trustBarFill) DOM.trustBarFill.style.width = `${percent}%`;
-      if (DOM.likeCountDetail) DOM.likeCountDetail.textContent = `${likes} Likes 👍`;
-      if (DOM.dislikeCountDetail) DOM.dislikeCountDetail.textContent = `${dislikes} Dislikes 👎`;
-
-      const cleanPhone = (prod.phone || '').replace(/[^0-9]/g, '');
-      const waPhone = cleanPhone.startsWith('0') ? '255' + cleanPhone.substring(1) : cleanPhone;
-      const waMsg = encodeURIComponent(`Habari ${prod.seller}! Nimeona tangazo lako la "${prod.title}" TZS ${Number(prod.price).toLocaleString()} kwenye MtaaX. Bado ipo?`);
-
-      if (DOM.whatsappBtn) DOM.whatsappBtn.href = `https://wa.me/${waPhone}?text=${waMsg}`;
-      if (DOM.callBtn) DOM.callBtn.href = `tel:${cleanPhone}`;
-
-      if (prod.deviceKey === AppState.deviceKey) {
-        DOM.ownerControls?.classList.remove('hidden');
-      } else {
-        DOM.ownerControls?.classList.add('hidden');
-      }
-
-      DOM.detailsModal?.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeDetailsModalFn() {
-      DOM.detailsModal?.classList.add('hidden');
-      document.body.style.overflow = '';
-    }
-
-    async function handleVote(type) {
-      if (!AppState.selectedProduct) return;
-      const prod = AppState.selectedProduct;
-      const voteKey = `${prod.id}_voted`;
-
-      if (AppState.votedItems[voteKey]) {
-        showToast('Ushampigia kura muuzaji huyu tayari!');
-        return;
-      }
-
-      if (type === 'like') {
-        prod.likes = (prod.likes || 0) + 1;
-      } else {
-        prod.dislikes = (prod.dislikes || 0) + 1;
-      }
-
-      AppState.votedItems[voteKey] = type;
-      saveStorage('mtaax_voted', AppState.votedItems);
-
-      if (db && firebaseLoaded) {
-        try {
-          const prodRef = doc(db, 'artifacts', appId, 'public', 'data', 'listings', prod.id);
-          await updateDoc(prodRef, {
-            likes: prod.likes,
-            dislikes: prod.dislikes
-          });
-        } catch (err) {
-          console.warn('Vote sync fallback:', err);
-        }
-      }
-
-      showToast(type === 'like' ? 'Asante kwa kupiga kura ya Likes 👍' : 'Kura yako ya Dislike imerekodiwa 👎');
-      openDetailsModal(prod);
-      renderApp();
-    }
-
-    async function markAsSold() {
-      if (!AppState.selectedProduct) return;
-      const prod = AppState.selectedProduct;
-
-      prod.status = 'sold';
-      if (db && firebaseLoaded) {
-        try {
-          const prodRef = doc(db, 'artifacts', appId, 'public', 'data', 'listings', prod.id);
-          await updateDoc(prodRef, { status: 'sold' });
-        } catch (e) {
-          console.warn('Update status fallback', e);
-        }
-      }
-
-      showToast('Tangazo limewekwa "IMEUZWA"');
-      closeDetailsModalFn();
-      renderApp();
-    }
-
-    async function deleteAd() {
-      if (!AppState.selectedProduct) return;
-      const prod = AppState.selectedProduct;
-
-      AppState.products = AppState.products.filter(p => p.id !== prod.id);
-      AppState.localProducts = AppState.localProducts.filter(p => p.id !== prod.id);
-      saveStorage('mtaax_local_products', AppState.localProducts);
-
-      if (db && firebaseLoaded) {
-        try {
-          const prodRef = doc(db, 'artifacts', appId, 'public', 'data', 'listings', prod.id);
-          await deleteDoc(prodRef);
-        } catch (e) {
-          console.warn('Delete ad fallback', e);
-        }
-      }
-
-      showToast('Tangazo limefutwa kikamilifu');
-      closeDetailsModalFn();
-      renderApp();
-    }
-
-    function openPostModal(type = 'ad') {
-      DOM.postModal?.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closePostModalFn() {
-      DOM.postModal?.classList.add('hidden');
-      document.body.style.overflow = '';
-      DOM.postForm?.reset();
-      if (DOM.imagePreview) DOM.imagePreview.classList.add('hidden');
-      if (DOM.uploadLabel) DOM.uploadLabel.textContent = 'Chagua au Piga Picha';
-    }
-
     function setupEventListeners() {
-      document.querySelectorAll('.nav-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          const target = tab.getAttribute('data-tab');
-          document.querySelectorAll('.nav-tab').forEach(t => {
-            t.classList.remove('active', 'text-mtaa-400');
-            t.classList.add('text-gray-400');
-          });
-          tab.classList.add('active', 'text-mtaa-400');
-          tab.classList.remove('text-gray-400');
-
-          document.querySelectorAll('.tab-view').forEach(view => view.classList.add('hidden'));
-          if (target === 'home') DOM.homeView?.classList.remove('hidden');
-          if (target === 'favorites') DOM.favoritesView?.classList.remove('hidden');
-          if (target === 'profile') DOM.profileView?.classList.remove('hidden');
-        });
-      });
-
-      DOM.neighborhoodBtn?.addEventListener('click', () => {
-        DOM.neighborhoodDropdown?.classList.toggle('hidden');
-      });
-
-      document.querySelectorAll('.neighborhood-option').forEach(opt => {
+      DOM.regionBtn?.addEventListener('click', () => DOM.regionDropdown?.classList.toggle('hidden'));
+      document.querySelectorAll('.region-opt').forEach(opt => {
         opt.addEventListener('click', () => {
           const val = opt.getAttribute('data-value');
-          AppState.neighborhood = val;
-          if (DOM.currentNeighborhood) DOM.currentNeighborhood.textContent = val;
-          DOM.neighborhoodDropdown?.classList.add('hidden');
+          AppState.region = val;
+          if (DOM.currentRegion) DOM.currentRegion.textContent = val;
+          DOM.regionDropdown?.classList.add('hidden');
           renderApp();
         });
       });
 
       DOM.searchInput?.addEventListener('input', (e) => {
         AppState.searchQuery = e.target.value;
-        if (e.target.value.trim() !== '') {
-          DOM.clearSearchBtn?.classList.remove('hidden');
-        } else {
-          DOM.clearSearchBtn?.classList.add('hidden');
-        }
-        renderProducts();
-      });
-
-      DOM.clearSearchBtn?.addEventListener('click', () => {
-        if (DOM.searchInput) DOM.searchInput.value = '';
-        AppState.searchQuery = '';
-        DOM.clearSearchBtn?.classList.add('hidden');
         renderProducts();
       });
 
       document.querySelectorAll('.category-chip').forEach(chip => {
         chip.addEventListener('click', () => {
-          document.querySelectorAll('.category-chip').forEach(c => {
-            c.classList.remove('bg-mtaa-500', 'text-gray-950', 'font-semibold');
-            c.classList.add('bg-gray-800', 'text-gray-300');
-          });
-          chip.classList.add('bg-mtaa-500', 'text-gray-950', 'font-semibold');
-          chip.classList.remove('bg-gray-800', 'text-gray-300');
-
+          document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('bg-mtaa-500', 'text-gray-950'));
+          chip.classList.add('bg-mtaa-500', 'text-gray-950');
           AppState.category = chip.getAttribute('data-cat');
           renderProducts();
         });
       });
 
-      DOM.sortSelect?.addEventListener('change', (e) => {
-        AppState.sortBy = e.target.value;
-        renderProducts();
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          const target = tab.getAttribute('data-tab');
+          document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
+          if (target === 'home') DOM.homeView?.classList.remove('hidden');
+          if (target === 'favorites') DOM.favoritesView?.classList.remove('hidden');
+          if (target === 'profile') DOM.profileView?.classList.remove('hidden');
+        });
       });
 
-      DOM.helpBtn?.addEventListener('click', () => {
-        DOM.helpModal?.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-      });
-      DOM.closeHelpModal?.addEventListener('click', () => {
-        DOM.helpModal?.classList.add('hidden');
-        document.body.style.overflow = '';
-      });
-      DOM.helpModalOverlay?.addEventListener('click', () => {
-        DOM.helpModal?.classList.add('hidden');
-        document.body.style.overflow = '';
-      });
-
-      DOM.openPostModalBtn?.addEventListener('click', () => openPostModal('ad'));
-      DOM.closePostModal?.addEventListener('click', closePostModalFn);
-      DOM.postModalOverlay?.addEventListener('click', closePostModalFn);
-
-      DOM.closeDetailsModal?.addEventListener('click', closeDetailsModalFn);
-      DOM.detailsModalOverlay?.addEventListener('click', closeDetailsModalFn);
-
-      DOM.likeBtn?.addEventListener('click', () => handleVote('like'));
-      DOM.dislikeBtn?.addEventListener('click', () => handleVote('dislike'));
-
-      DOM.markSoldBtn?.addEventListener('click', markAsSold);
-      DOM.deleteAdBtn?.addEventListener('click', deleteAd);
-
-      DOM.shareAdBtn?.addEventListener('click', () => {
-        if (!AppState.selectedProduct) return;
-        const text = `Angalia "${AppState.selectedProduct.title}" TZS ${Number(AppState.selectedProduct.price).toLocaleString()} mtaani kwako kupitia MtaaX!`;
-        const url = window.location.href;
-        
-        if (navigator.share) {
-          navigator.share({ title: AppState.selectedProduct.title, text, url }).catch(() => {});
-        } else {
-          document.execCommand('copy');
-          showToast('Link ya MtaaX ime-kopiwa!');
-        }
-      });
-
-      let compressedImageData = 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=500&auto=format&fit=crop&q=60';
-
-      DOM.imageInput?.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          try {
-            if (DOM.uploadLabel) DOM.uploadLabel.textContent = 'Inapunguza picha...';
-            compressedImageData = await compressAndConvertImage(file);
-            if (DOM.previewImg) DOM.previewImg.src = compressedImageData;
-            DOM.imagePreview?.classList.remove('hidden');
-            if (DOM.uploadLabel) DOM.uploadLabel.textContent = 'Picha Imechaguliwa!';
-          } catch (err) {
-            console.error(err);
-            if (DOM.uploadLabel) DOM.uploadLabel.textContent = 'Shida kwenye picha';
-          }
-        }
-      });
+      DOM.openPostModalBtn?.addEventListener('click', () => DOM.postModal?.classList.remove('hidden'));
+      DOM.closePostModal?.addEventListener('click', () => DOM.postModal?.classList.add('hidden'));
+      DOM.closeDetailsModal?.addEventListener('click', () => DOM.detailsModal?.classList.add('hidden'));
 
       DOM.postForm?.addEventListener('submit', async (e) => {
         e.preventDefault();
-
-        if (AppState.isPosting) return;
-        AppState.isPosting = true;
-
-        if (DOM.submitAdBtn) {
-          DOM.submitAdBtn.disabled = true;
-          DOM.submitAdBtn.innerHTML = `<i class="ph ph-spinner animate-spin text-base"></i> Inatuma Mtaani...`;
-        }
-
         const newAd = {
           id: 'ad_' + Date.now(),
           title: document.getElementById('postTitle').value,
@@ -1500,41 +932,21 @@
           condition: document.getElementById('postCondition').value,
           swap: document.getElementById('postSwap').value,
           negotiable: document.getElementById('postNegotiable').value,
+          region: document.getElementById('postRegion').value,
+          district: document.getElementById('postDistrict').value,
           category: document.getElementById('postCategory').value,
-          neighborhood: document.getElementById('postNeighborhood').value,
           seller: document.getElementById('postSeller').value,
           phone: document.getElementById('postPhone').value,
           description: document.getElementById('postDescription').value,
-          image: compressedImageData,
-          likes: 1,
-          dislikes: 0,
-          status: 'active',
-          deviceKey: AppState.deviceKey,
-          createdAt: Date.now()
+          image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=500&auto=format&fit=crop&q=60',
+          likes: 1, dislikes: 0, status: 'active', deviceKey: AppState.deviceKey, createdAt: Date.now()
         };
 
         AppState.localProducts.unshift(newAd);
         saveStorage('mtaax_local_products', AppState.localProducts);
-
-        if (db && firebaseLoaded && AppState.currentUser) {
-          try {
-            const newDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'listings', newAd.id);
-            await setDoc(newDocRef, newAd);
-          } catch (err) {
-            console.warn('Firestore write fallback:', err);
-          }
-        }
-
         AppState.products.unshift(newAd);
-        showToast('Tangazo lako limekwenda LIVE Mtaani!');
-
-        AppState.isPosting = false;
-        if (DOM.submitAdBtn) {
-          DOM.submitAdBtn.disabled = false;
-          DOM.submitAdBtn.innerHTML = `<i class="ph ph-paper-plane-right text-base"></i> Tangaza Sasa Soko la Mtaani`;
-        }
-
-        closePostModalFn();
+        showToast('Tangazo Limekwenda LIVE!');
+        DOM.postModal?.classList.add('hidden');
         renderApp();
       });
     }
