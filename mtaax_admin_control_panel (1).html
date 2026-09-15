@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="sw" class="dark h-full bg-gray-950 text-gray-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MtaaX — Admin Control Panel</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            mtaa: {
+              50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac', 400: '#4ade80',
+              500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534', 900: '#14532d', 950: '#052e16'
+            }
+          },
+          boxShadow: {
+            'glow-emerald': '0 0 25px -5px rgba(34, 197, 94, 0.3)',
+            'glow-rose': '0 0 25px -5px rgba(244, 63, 94, 0.3)',
+            'glow-amber': '0 0 25px -5px rgba(245, 158, 11, 0.3)',
+            'glow-blue': '0 0 25px -5px rgba(59, 130, 246, 0.3)'
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .glass-card {
+      background: rgba(17, 24, 39, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .glass-card-hover {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card-hover:hover {
+      background: rgba(24, 34, 53, 0.85);
+      border-color: rgba(74, 222, 128, 0.3);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen max-w-3xl mx-auto shadow-2xl border-x border-gray-800/80 p-3 sm:p-6 relative flex flex-col selection:bg-mtaa-500 selection:text-gray-950">
+
+  <!-- Authentication Card Section -->
+  <div id="authSection" class="my-auto py-12 px-4">
+    <div class="glass-card p-8 sm:p-10 rounded-3xl text-center space-y-6 shadow-2xl relative overflow-hidden border border-gray-800/90 max-w-md mx-auto">
+      <div class="absolute -top-16 -right-16 w-32 h-32 bg-mtaa-500/10 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+      <div class="w-16 h-16 bg-gradient-to-tr from-mtaa-600 via-mtaa-500 to-emerald-300 text-gray-950 rounded-2xl flex items-center justify-center mx-auto text-3xl shadow-glow-emerald">
+        <i class="ph-bold ph-shield-check"></i>
+      </div>
+      
+      <div>
+        <h1 class="text-2xl font-black text-white tracking-tight">Mtaa<span class="text-mtaa-400">X</span> Admin</h1>
+        <p class="text-xs text-gray-400 mt-1 font-medium">Neighborhood Moderation & Control Center</p>
+      </div>
+
+      <form id="loginForm" class="space-y-4 pt-1">
+        <div class="relative">
+          <input type="password" id="pinInput" placeholder="Ingiza Admin PIN..." required class="w-full bg-gray-950/90 border border-gray-700/80 rounded-2xl px-4 py-3.5 text-center text-sm font-mono tracking-widest text-white focus:outline-none focus:border-mtaa-400 transition-colors shadow-inner">
+        </div>
+        <button type="submit" class="w-full bg-gradient-to-r from-mtaa-500 via-emerald-400 to-teal-400 hover:from-mtaa-400 hover:to-emerald-300 text-gray-950 font-extrabold py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-emerald active:scale-98 transition-all cursor-pointer tracking-wide">
+          <i class="ph-bold ph-key text-base"></i>
+          <span>Fungua Admin Panel</span>
+        </button>
+      </form>
+
+      <div class="bg-gray-950/80 p-3 rounded-2xl border border-gray-800/80 flex items-center justify-center gap-2 text-center">
+        <i class="ph-fill ph-info text-mtaa-400 text-sm"></i>
+        <p class="text-[11px] text-gray-400 font-mono">PIN ya Kuingilia: <span class="text-mtaa-300 font-bold bg-mtaa-950 px-2 py-0.5 rounded border border-mtaa-500/30">mtaax123</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Section -->
+  <div id="dashboardSection" class="hidden space-y-6">
+    
+    <!-- Top Bar Controls -->
+    <header class="flex items-center justify-between border-b border-gray-800/80 pb-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-mtaa-500/20 to-emerald-500/10 text-mtaa-400 border border-mtaa-500/30 rounded-2xl flex items-center justify-center shadow-inner">
+          <i class="ph-bold ph-sliders-horizontal text-xl"></i>
+        </div>
+        <div>
+          <h2 class="text-base font-extrabold text-white tracking-tight flex items-center gap-1.5">
+            MtaaX Control Console
+            <span class="bg-mtaa-500/20 text-mtaa-300 text-[9px] font-mono px-2 py-0.5 rounded-full border border-mtaa-500/30">LIVE</span>
+          </h2>
+          <p class="text-[10px] text-gray-400 font-mono">Real-time Moderation v4.5</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="changePinBtn" class="bg-gray-900 border border-amber-500/40 hover:bg-amber-950/60 text-amber-300 px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 font-semibold transition-all shadow-sm cursor-pointer">
+          <i class="ph-bold ph-key"></i> <span class="hidden sm:inline">Badili PIN</span>
+        </button>
+        <button id="configBtn" class="bg-gray-900 border border-gray-700 hover:bg-gray-800 text-gray-300 px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 font-semibold transition-all cursor-pointer">
+          <i class="ph-bold ph-gear"></i> <span class="hidden sm:inline">Config</span>
+        </button>
+        <button id="logoutBtn" class="bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-500/40 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer">
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- Connection Status Banner -->
+    <div id="connectionBanner" class="bg-amber-950/50 border border-amber-500/40 p-3.5 rounded-2xl flex items-center justify-between gap-3 text-xs shadow-lg backdrop-blur">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="relative flex items-center justify-center flex-shrink-0">
+          <span id="statusLed" class="w-3 h-3 rounded-full bg-amber-400 animate-pulse"></span>
+        </div>
+        <div class="min-w-0">
+          <p id="statusTitle" class="font-bold text-amber-300 truncate text-xs">Connecting to x-market-1e873 server...</p>
+          <p id="statusSubtitle" class="text-[10px] text-amber-200/70 truncate font-mono mt-0.5">Project: x-market-1e873</p>
+        </div>
+      </div>
+      <button id="reconnectBtn" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-3 py-1.5 rounded-xl text-[11px] font-bold flex-shrink-0 transition-all font-mono cursor-pointer">
+        Refresh
+      </button>
+    </div>
+
+    <!-- Stat Metric Cards Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+      <div class="glass-card p-4 rounded-2xl border border-gray-800/80 hover:border-emerald-500/40 transition-all shadow-md">
+        <div class="flex items-center justify-between text-emerald-400 text-xs mb-1.5">
+          <span class="font-bold uppercase text-[9px] tracking-wider text-emerald-400">👀 Live Online</span>
+          <div class="w-7 h-7 bg-emerald-500/10 text-emerald-400 rounded-lg flex items-center justify-center">
+            <i class="ph-bold ph-eye text-base animate-pulse"></i>
+          </div>
+        </div>
+        <span id="statOnline" class="text-2xl font-black text-emerald-400 font-mono">0</span>
+      </div>
+
+      <div class="glass-card p-4 rounded-2xl border border-gray-800/80 hover:border-mtaa-500/40 transition-all shadow-md">
+        <div class="flex items-center justify-between text-gray-400 text-xs mb-1.5">
+          <span class="font-bold uppercase text-[9px] tracking-wider text-gray-400">Total Ads</span>
+          <div class="w-7 h-7 bg-mtaa-500/10 text-mtaa-400 rounded-lg flex items-center justify-center">
+            <i class="ph-bold ph-storefront text-base"></i>
+          </div>
+        </div>
+        <span id="statTotal" class="text-2xl font-black text-white font-mono">0</span>
+      </div>
+
+      <div class="glass-card p-4 rounded-2xl border border-gray-800/80 hover:border-rose-500/40 transition-all shadow-md">
+        <div class="flex items-center justify-between text-rose-400 text-xs mb-1.5">
+          <span class="font-bold uppercase text-[9px] tracking-wider text-rose-400">🚨 Flagged</span>
+          <div class="w-7 h-7 bg-rose-500/10 text-rose-400 rounded-lg flex items-center justify-center">
+            <i class="ph-bold ph-warning-circle text-base"></i>
+          </div>
+        </div>
+        <span id="statReported" class="text-2xl font-black text-rose-400 font-mono">0</span>
+      </div>
+
+      <div class="glass-card p-4 rounded-2xl border border-gray-800/80 hover:border-blue-500/40 transition-all shadow-md">
+        <div class="flex items-center justify-between text-blue-400 text-xs mb-1.5">
+          <span class="font-bold uppercase text-[9px] tracking-wider text-blue-400">Sellers</span>
+          <div class="w-7 h-7 bg-blue-500/10 text-blue-400 rounded-lg flex items-center justify-center">
+            <i class="ph-bold ph-user-check text-base"></i>
+          </div>
+        </div>
+        <span id="statSellers" class="text-2xl font-black text-blue-400 font-mono">0</span>
+      </div>
+
+      <div class="glass-card p-4 rounded-2xl border border-gray-800/80 hover:border-amber-500/40 transition-all shadow-md">
+        <div class="flex items-center justify-between text-amber-400 text-xs mb-1.5">
+          <span class="font-bold uppercase text-[9px] tracking-wider text-amber-400">VIP Ads</span>
+          <div class="w-7 h-7 bg-amber-500/10 text-amber-400 rounded-lg flex items-center justify-center">
+            <i class="ph-bold ph-star text-base"></i>
+          </div>
+        </div>
+        <span id="statFeatured" class="text-2xl font-black text-amber-400 font-mono">0</span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar border-b border-gray-800/80 pb-3 text-xs">
+      <button class="admin-tab active bg-gradient-to-r from-mtaa-500 to-emerald-400 text-gray-950 font-extrabold px-3.5 py-2 rounded-xl whitespace-nowrap transition-all shadow-glow-emerald cursor-pointer" data-tab="listings">
+        📦 All Listings
+      </button>
+      <button class="admin-tab bg-gray-900 text-gray-400 hover:text-white px-3.5 py-2 rounded-xl whitespace-nowrap transition-all flex items-center gap-1.5 border border-gray-800 cursor-pointer" data-tab="flagged">
+        🚨 Flagged Reports
+        <span id="flaggedBadgeCount" class="bg-rose-500 text-white text-[9px] px-1.5 py-0.2 rounded-full hidden font-mono font-bold">0</span>
+      </button>
+      <button class="admin-tab bg-gray-900 text-gray-400 hover:text-white px-3.5 py-2 rounded-xl whitespace-nowrap transition-all border border-gray-800 cursor-pointer" data-tab="sellers">
+        👥 Verified Badges CRM
+      </button>
+      <button class="admin-tab bg-gray-900 text-gray-400 hover:text-white px-3.5 py-2 rounded-xl whitespace-nowrap transition-all border border-gray-800 cursor-pointer" data-tab="broadcast">
+        📢 Live Broadcast
+      </button>
+      <button id="exportCsvBtn" class="bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/40 text-indigo-300 font-bold px-3 py-2 rounded-xl whitespace-nowrap transition-all flex items-center gap-1.5 ml-auto cursor-pointer">
+        <i class="ph-bold ph-download-simple text-sm"></i> Export CSV
+      </button>
+    </div>
+
+    <!-- Listings Panel -->
+    <div id="tabListings" class="admin-view space-y-3.5">
+      <div class="flex items-center justify-between text-xs gap-3 flex-wrap">
+        <span class="text-gray-300 font-semibold">Marketplace Ads Moderation</span>
+        <div class="relative w-full sm:w-64">
+          <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+          <input type="text" id="adminSearchInput" placeholder="Tafuta listing au seller..." class="w-full bg-gray-900 border border-gray-700/80 rounded-xl pl-8 pr-3 py-2 text-xs text-white focus:outline-none focus:border-mtaa-500 transition-colors">
+        </div>
+      </div>
+      <div id="adminListingsGrid" class="space-y-3"></div>
+    </div>
+
+    <!-- Flagged Listings Panel -->
+    <div id="tabFlagged" class="admin-view hidden space-y-3.5">
+      <div class="bg-gradient-to-r from-rose-950/60 to-gray-900 border border-rose-500/40 p-4 rounded-2xl text-xs text-rose-200 space-y-1">
+        <p class="font-bold flex items-center gap-2 text-rose-300"><i class="ph-bold ph-warning text-base"></i> User Reported Listings (Fraud / Issues)</p>
+        <p class="text-[11px] text-rose-200/80">Review seller contact details and security device info to prevent scams.</p>
+      </div>
+      <div id="adminFlaggedGrid" class="space-y-3"></div>
+    </div>
+
+    <!-- Google Sellers CRM Panel -->
+    <div id="tabSellers" class="admin-view hidden space-y-3.5">
+      <div class="bg-gradient-to-r from-blue-950/60 to-gray-900 border border-blue-500/40 p-4 rounded-2xl text-xs text-blue-200 space-y-1">
+        <p class="font-bold flex items-center gap-2 text-blue-300"><i class="ph-bold ph-user-check text-base"></i> Admin Verified Badges Control</p>
+        <p class="text-[11px] text-blue-200/80">Grant or revoke Verified Badges 🛡️ for trusted sellers across MtaaX.</p>
+      </div>
+      <div id="adminSellersGrid" class="space-y-3"></div>
+    </div>
+
+    <!-- Live System Broadcast Panel -->
+    <div id="tabBroadcast" class="admin-view hidden space-y-3.5">
+      <div class="bg-gradient-to-br from-emerald-950 via-gray-900 to-teal-950 border border-emerald-500/40 p-5 rounded-2xl text-xs space-y-4 shadow-xl">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center flex-shrink-0">
+            <i class="ph-fill ph-megaphone text-xl animate-pulse"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-sm text-white">Live System Broadcast Generator</h3>
+            <p class="text-[11px] text-emerald-300/80">Send urgent announcements directly to all active buyers' app screens real-time.</p>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] text-gray-300 mb-1.5 font-semibold">Ujumbe wa Tangazo (Message Text)</label>
+          <textarea id="broadcastInput" rows="3" placeholder="Mfano: Taarifa kwa wateja wetu wa Arusha: Punguzo kubwa la bei wiki hii! Au: Mfumo unafanyiwa marekebisho madogo..." class="w-full bg-gray-950 font-sans text-xs text-white border border-emerald-500/40 rounded-xl p-3 focus:outline-none focus:border-emerald-400 transition-colors"></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-1">
+          <button id="clearBroadcastBtn" class="bg-gray-900 hover:bg-gray-800 text-gray-300 border border-gray-700 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer">
+            Clear Active Notice 🗑️
+          </button>
+          <button id="sendBroadcastBtn" class="bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-gray-950 font-extrabold px-5 py-2.5 rounded-xl text-xs shadow-glow-emerald active:scale-95 transition-all cursor-pointer">
+            Broadcast Live Now 🚀
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Change PIN Modal -->
+  <div id="pinModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="bg-gray-900 border border-amber-500/40 rounded-3xl p-6 w-full max-w-xs space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+        <h3 class="font-bold text-sm text-amber-300 flex items-center gap-2"><i class="ph-bold ph-key"></i> Badilisha Admin PIN</h3>
+        <button id="closePinModal" class="text-gray-400 hover:text-white transition-colors"><i class="ph-bold ph-x text-lg"></i></button>
+      </div>
+      <div class="space-y-3">
+        <div>
+          <label class="block text-[11px] text-gray-400 mb-1">PIN ya Sasa</label>
+          <input type="password" id="currentPinInput" placeholder="Ingiza PIN ya zamani..." class="w-full bg-gray-950 font-mono text-xs text-white border border-gray-700 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-amber-400">
+        </div>
+        <div>
+          <label class="block text-[11px] text-gray-400 mb-1">PIN Mpya</label>
+          <input type="password" id="newPinInput" placeholder="Ingiza PIN mpya..." class="w-full bg-gray-950 font-mono text-xs text-white border border-gray-700 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-amber-400">
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 pt-1">
+        <button id="savePinBtn" class="w-full bg-amber-500 hover:bg-amber-400 text-gray-950 font-bold py-2.5 rounded-xl text-xs cursor-pointer transition-all">Hifadhi PIN Mpya</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Config Modal -->
+  <div id="configModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="bg-gray-900 border border-gray-700 rounded-3xl p-6 w-full max-w-md space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+        <h3 class="font-bold text-sm text-white flex items-center gap-2"><i class="ph-bold ph-gear text-mtaa-400"></i> Firebase Credentials Config</h3>
+        <button id="closeConfigModal" class="text-gray-400 hover:text-white transition-colors"><i class="ph-bold ph-x text-lg"></i></button>
+      </div>
+      <p class="text-[11px] text-gray-400">Paste your Firebase Config JSON here if you wish to override credentials:</p>
+      <textarea id="configJsonInput" rows="6" class="w-full bg-gray-950 font-mono text-[11px] text-mtaa-300 border border-gray-700 rounded-xl p-3 focus:outline-none focus:border-mtaa-400"></textarea>
+      <div class="flex justify-end gap-2 pt-1">
+        <button id="saveConfigBtn" class="bg-mtaa-500 hover:bg-mtaa-400 text-gray-950 font-bold px-4 py-2.5 rounded-xl text-xs cursor-pointer transition-all">Save Config</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Confirmation Dialog Modal -->
+  <div id="confirmModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="bg-gray-900 border border-gray-700 rounded-3xl p-6 w-full max-w-xs text-center space-y-4 shadow-2xl">
+      <div class="w-12 h-12 bg-rose-500/20 text-rose-400 rounded-2xl flex items-center justify-center mx-auto text-2xl border border-rose-500/30">
+        <i class="ph-bold ph-warning"></i>
+      </div>
+      <div>
+        <h4 id="confirmTitle" class="font-bold text-sm text-white">Confirm Action</h4>
+        <p id="confirmMessage" class="text-xs text-gray-400 mt-1">Are you sure you want to proceed?</p>
+      </div>
+      <div class="grid grid-cols-2 gap-2.5 pt-1">
+        <button id="confirmCancelBtn" class="bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-2.5 rounded-xl text-xs cursor-pointer">Cancel</button>
+        <button id="confirmOkBtn" class="bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">Yes, Proceed</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Toast Notification -->
+  <div id="adminToast" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-mtaa-300 border border-mtaa-500/50 px-5 py-3 rounded-full text-xs font-semibold shadow-glow-emerald hidden flex items-center gap-2.5 backdrop-blur-lg">
+    <i class="ph-fill ph-check-circle text-lg text-mtaa-400"></i>
+    <span id="adminToastMsg">Message...</span>
+  </div>
+
+  <!-- JavaScript Modules and Moderation Logic -->
+  <script type="module">
+    function getAdminPin() {
+      return localStorage.getItem('mtaax_admin_custom_pin') || "mtaax123";
+    }
+
+    function resolveFirebaseConfig() {
+      try {
+        const custom = localStorage.getItem('mtaax_firebase_custom_config');
+        if (custom) return JSON.parse(custom);
+      } catch(e){}
+      return {
+        apiKey: "AIzaSyDDAeW5fSu9K4m0jKYjzJa3PBVV8QjDH2o",
+        authDomain: "x-market-1e873.firebaseapp.com",
+        projectId: "x-market-1e873",
+        storageBucket: "x-market-1e873.firebasestorage.app",
+        messagingSenderId: "721004226077",
+        appId: "1:721004226077:web:20de5bcc63a7200f1808f4"
+      };
+    }
+
+    const firebaseConfig = resolveFirebaseConfig();
+
+    let initializeApp, getAuth, signInAnonymously, getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot;
+    let auth, db;
+    let allListings = [];
+    let registeredUsers = [];
+    let verifiedSellers = loadStorage('mtaax_verified_sellers', []);
+    let bannedSellers = loadStorage('mtaax_banned_sellers', []);
+    let pendingConfirmAction = null;
+
+    function loadStorage(key, fallback) {
+      try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch(e) { return fallback; }
+    }
+    function saveStorage(key, data) {
+      try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) {}
+    }
+
+    function showAdminToast(msg) {
+      const toast = document.getElementById('adminToast');
+      const msgElem = document.getElementById('adminToastMsg');
+      if (toast && msgElem) {
+        msgElem.textContent = msg;
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 3000);
+      }
+    }
+
+    function setConnectionStatus(status, title, subtitle) {
+      const led = document.getElementById('statusLed');
+      const titleElem = document.getElementById('statusTitle');
+      const subElem = document.getElementById('statusSubtitle');
+      const banner = document.getElementById('connectionBanner');
+
+      if (!led || !titleElem) return;
+
+      titleElem.textContent = title;
+      if (subElem) subElem.textContent = subtitle;
+
+      if (status === 'connected') {
+        led.className = "w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_10px_#22c55e]";
+        banner.className = "bg-emerald-950/50 border border-emerald-500/40 p-3.5 rounded-2xl flex items-center justify-between gap-3 text-xs shadow-lg backdrop-blur";
+        titleElem.className = "font-bold text-emerald-300 truncate text-xs";
+      } else if (status === 'connecting') {
+        led.className = "w-3 h-3 rounded-full bg-amber-400 animate-pulse";
+        banner.className = "bg-amber-950/50 border border-amber-500/40 p-3.5 rounded-2xl flex items-center justify-between gap-3 text-xs shadow-lg backdrop-blur";
+        titleElem.className = "font-bold text-amber-300 truncate text-xs";
+      } else {
+        led.className = "w-3 h-3 rounded-full bg-rose-500 shadow-[0_0_10px_#f43f5e]";
+        banner.className = "bg-rose-950/50 border border-rose-500/40 p-3.5 rounded-2xl flex items-center justify-between gap-3 text-xs shadow-lg backdrop-blur";
+        titleElem.className = "font-bold text-rose-300 truncate text-xs";
+      }
+    }
+
+    async function initAdminFirebase() {
+      setConnectionStatus('connecting', 'Connecting to x-market-1e873 server...', 'Project: ' + firebaseConfig.projectId);
+      try {
+        const appMod = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js");
+        const authMod = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js");
+        const dbMod = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+
+        initializeApp = appMod.initializeApp;
+        getAuth = authMod.getAuth;
+        signInAnonymously = authMod.signInAnonymously;
+        getFirestore = dbMod.getFirestore;
+        collection = dbMod.collection;
+        doc = dbMod.doc;
+        setDoc = dbMod.setDoc;
+        updateDoc = dbMod.updateDoc;
+        deleteDoc = dbMod.deleteDoc;
+        onSnapshot = dbMod.onSnapshot;
+
+        const app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+
+        try { await signInAnonymously(auth); } catch(authErr){}
+
+        const listingsRef = collection(db, 'listings');
+        const usersRef = collection(db, 'users');
+        const presenceRef = collection(db, 'online_presence');
+
+        onSnapshot(presenceRef, (snapshot) => {
+          const now = Date.now();
+          let activeCount = 0;
+          snapshot.forEach(docSnap => {
+            const data = docSnap.data();
+            if (data && data.lastSeen && (now - data.lastSeen < 45000)) {
+              activeCount++;
+            }
+          });
+          const onlineElem = document.getElementById('statOnline');
+          if (onlineElem) onlineElem.textContent = activeCount;
+        }, (err) => console.warn("Presence sync notice:", err));
+
+        onSnapshot(usersRef, (snapshot) => {
+          registeredUsers = [];
+          snapshot.forEach(docSnap => {
+            registeredUsers.push({ id: docSnap.id, ...docSnap.data() });
+          });
+          renderAdminDashboard();
+        }, (err) => console.warn("Users sync notice:", err));
+
+        onSnapshot(listingsRef, (snapshot) => {
+          allListings = [];
+          snapshot.forEach(docSnap => {
+            allListings.push({ id: docSnap.id, ...docSnap.data() });
+          });
+          
+          setConnectionStatus('connected', '🟢 CONNECTED (Server Active)', `Using Firestore Database (${firebaseConfig.projectId}) | Total Ads: ${allListings.length}`);
+          renderAdminDashboard();
+        }, (error) => {
+          console.warn("Firestore error:", error);
+          setConnectionStatus('error', '🔴 DISCONNECTED (Check Rules)', 'Please publish Firestore rules on Firebase Console.');
+        });
+      } catch(e) {
+        console.warn("Init error:", e);
+        setConnectionStatus('error', '🔴 SERVER ERROR', e.message);
+      }
+    }
+
+    function renderAdminDashboard() {
+      const searchQ = (document.getElementById('adminSearchInput')?.value || '').toLowerCase();
+      
+      let filtered = allListings;
+      if (searchQ) {
+        filtered = filtered.filter(p => 
+          p.title?.toLowerCase().includes(searchQ) || 
+          p.seller?.toLowerCase().includes(searchQ) ||
+          p.sellerEmail?.toLowerCase().includes(searchQ) ||
+          p.region?.toLowerCase().includes(searchQ)
+        );
+      }
+
+      const reportedListings = filtered.filter(p => p.reported);
+      const featuredListings = filtered.filter(p => p.isFeatured);
+      
+      // Combine Firestore Registered Users (Google Logins) and Listing Sellers
+      const uniqueSellersMap = {};
+
+      registeredUsers.forEach(u => {
+        const key = u.email || u.displayName || u.uid;
+        uniqueSellersMap[key] = {
+          name: u.displayName || 'Google User',
+          email: u.email || 'No Email',
+          photo: u.photoURL,
+          phone: u.phone || 'N/A',
+          region: u.region || 'Registered Account',
+          count: 0,
+          isRegisteredUser: true,
+          lastLogin: u.lastLogin,
+          device: u.securityTrack?.modelName || 'Mobile Device'
+        };
+      });
+
+      allListings.forEach(p => {
+        const key = p.sellerEmail || p.seller;
+        if (key) {
+          if (!uniqueSellersMap[key]) {
+            uniqueSellersMap[key] = {
+              name: p.seller,
+              email: p.sellerEmail || 'No Email',
+              photo: p.sellerPhoto,
+              phone: p.phone,
+              region: p.region,
+              count: 0,
+              device: p.securityTrack?.modelName || 'Mobile Device'
+            };
+          }
+          uniqueSellersMap[key].count++;
+        }
+      });
+
+      document.getElementById('statTotal').textContent = allListings.length;
+      document.getElementById('statReported').textContent = reportedListings.length;
+      document.getElementById('statSellers').textContent = Object.keys(uniqueSellersMap).length;
+      document.getElementById('statFeatured').textContent = featuredListings.length;
+
+      const flaggedBadge = document.getElementById('flaggedBadgeCount');
+      if (flaggedBadge) {
+        flaggedBadge.textContent = reportedListings.length;
+        if (reportedListings.length > 0) flaggedBadge.classList.remove('hidden');
+        else flaggedBadge.classList.add('hidden');
+      }
+
+      renderListingsGrid(filtered);
+      renderFlaggedGrid(reportedListings);
+      renderSellersGrid(uniqueSellersMap);
+    }
+
+    function renderListingsGrid(listings) {
+      const container = document.getElementById('adminListingsGrid');
+      if (!container) return;
+
+      if (listings.length === 0) {
+        container.innerHTML = `<p class="text-center py-10 text-xs text-gray-500 font-medium">Hamna matangazo yaliyopatikana.</p>`;
+        return;
+      }
+
+      let html = '';
+      listings.forEach(p => {
+        const isVer = p.isVerified === true || verifiedSellers.includes(p.seller);
+        const sec = p.securityTrack || {};
+        const deviceText = sec.modelName || 'Mobile Device';
+
+        html += `
+          <div class="glass-card glass-card-hover rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border border-gray-800/80 shadow-md">
+            <div class="flex items-center gap-3.5 min-w-0 flex-1">
+              <img src="${p.image}" class="w-16 h-16 rounded-xl object-cover flex-shrink-0 bg-gray-950 border border-gray-800" onerror="this.src='https://placehold.co/100x100/16a34a/ffffff?text=Ad'">
+              <div class="min-w-0 flex-1 space-y-1">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <h4 class="font-bold text-xs text-white truncate">${p.title}</h4>
+                  ${isVer ? `<span class="text-emerald-400 text-xs" title="Verified Seller"><i class="ph-fill ph-seal-check"></i></span>` : ''}
+                  ${p.isFeatured ? `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[9px] font-extrabold px-1.5 py-0.2 rounded font-mono">VIP ⭐</span>` : ''}
+                  ${p.reported ? `<span class="bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[9px] font-bold px-1.5 py-0.2 rounded font-mono">FLAGGED</span>` : ''}
+                </div>
+                <p class="text-xs font-black text-mtaa-400 font-mono">TZS ${Number(p.price).toLocaleString()}</p>
+                <div class="flex flex-wrap items-center gap-2 text-[10px] text-gray-400 font-mono">
+                  <span>📍 ${p.region} (${p.district || ''})</span>
+                  <span>👤 ${p.seller}</span>
+                  ${p.sellerEmail ? `<span class="text-blue-400 truncate">📧 ${p.sellerEmail}</span>` : ''}
+                  <span class="text-emerald-300">📱 ${deviceText}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 flex-wrap w-full sm:w-auto justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-800/80">
+              <button onclick="toggleVerifyAd('${p.id}', ${!isVer})" class="px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all cursor-pointer ${isVer ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-900' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}">
+                ${isVer ? 'Verified 🛡️' : 'Grant Verified 🛡️'}
+              </button>
+              <button onclick="toggleVipAd('${p.id}', ${!p.isFeatured})" class="px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all cursor-pointer ${p.isFeatured ? 'bg-amber-950/80 text-amber-300 border border-amber-500/40 hover:bg-amber-900' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}">
+                ${p.isFeatured ? 'Remove VIP' : 'Make VIP ⭐'}
+              </button>
+              <button onclick="confirmDeleteAd('${p.id}')" class="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-rose-950/80 text-rose-300 border border-rose-500/40 hover:bg-rose-900 transition-all cursor-pointer">
+                Delete 🗑️
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function renderFlaggedGrid(flagged) {
+      const container = document.getElementById('adminFlaggedGrid');
+      if (!container) return;
+
+      if (flagged.length === 0) {
+        container.innerHTML = `<p class="text-center py-10 text-xs text-gray-500 font-medium">🎉 Hakuna tangazo lililoripotiwa hivi sasa.</p>`;
+        return;
+      }
+
+      let html = '';
+      flagged.forEach(p => {
+        const cleanPhone = (p.phone || '').replace(/[^0-9]/g, '');
+        const waPhone = cleanPhone.startsWith('0') ? '255' + cleanPhone.substring(1) : cleanPhone;
+
+        html += `
+          <div class="bg-rose-950/20 border border-rose-500/40 rounded-2xl p-4 space-y-3 shadow-lg">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <span class="bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[9px] font-bold px-2 py-0.5 rounded-full font-mono">🚨 FRAUD / ISSUE REPORT</span>
+                <h4 class="font-bold text-sm text-white mt-1.5">${p.title}</h4>
+                <p class="text-xs font-black text-mtaa-400 font-mono">TZS ${Number(p.price).toLocaleString()}</p>
+              </div>
+              <img src="${p.image}" class="w-16 h-16 rounded-xl object-cover flex-shrink-0 border border-rose-500/30">
+            </div>
+
+            <div class="bg-gray-950/80 p-3 rounded-xl text-[10px] space-y-1 font-mono text-gray-300 border border-gray-800/80">
+              <p>👤 Seller: <strong class="text-white">${p.seller}</strong></p>
+              <p>📧 Email: <span class="text-blue-400">${p.sellerEmail || 'N/A'}</span></p>
+              <p>📞 Phone: <span class="text-emerald-400">${p.phone}</span></p>
+              <p>📱 Device: <span class="text-amber-300">${p.securityTrack?.modelName || 'Unknown'} (${p.securityTrack?.platform || ''})</span></p>
+            </div>
+
+            <div class="flex items-center gap-2 pt-1 flex-wrap">
+              <a href="https://wa.me/${waPhone}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5 transition-all">
+                <i class="ph-fill ph-whatsapp-logo text-sm"></i> WhatsApp Seller
+              </a>
+              <button onclick="dismissReport('${p.id}')" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all cursor-pointer">
+                Dismiss Flag
+              </button>
+              <button onclick="confirmDeleteAd('${p.id}')" class="bg-rose-600 hover:bg-rose-500 text-white px-3 py-1.5 rounded-xl text-[10px] font-bold ml-auto transition-all cursor-pointer">
+                Delete Ad 🗑️
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function renderSellersGrid(sellersMap) {
+      const container = document.getElementById('adminSellersGrid');
+      if (!container) return;
+
+      const keys = Object.keys(sellersMap);
+      if (keys.length === 0) {
+        container.innerHTML = `<p class="text-center py-10 text-xs text-gray-500 font-medium">Hakuna watumiaji au wauzaji waliopatikana.</p>`;
+        return;
+      }
+
+      let html = '';
+      keys.forEach(key => {
+        const s = sellersMap[key];
+        const isVer = verifiedSellers.includes(s.name) || verifiedSellers.includes(s.email);
+        const isBanned = bannedSellers.includes(s.name) || bannedSellers.includes(s.email);
+
+        html += `
+          <div class="glass-card glass-card-hover border border-gray-800/80 rounded-2xl p-3.5 flex items-center justify-between gap-3 shadow-md">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-11 h-11 bg-mtaa-900 text-mtaa-300 rounded-2xl flex items-center justify-center font-bold text-sm flex-shrink-0 overflow-hidden border border-mtaa-500/30 shadow-inner">
+                ${s.photo ? `<img src="${s.photo}" class="w-full h-full object-cover">` : `<i class="ph-bold ph-user"></i>`}
+              </div>
+              <div class="min-w-0 space-y-0.5">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <h5 class="font-bold text-xs text-white truncate">${s.name}</h5>
+                  ${isVer ? `<i class="ph-fill ph-seal-check text-emerald-400 text-xs" title="Verified Seller"></i>` : ''}
+                  ${isBanned ? `<span class="bg-rose-600 text-white text-[8px] px-1.5 rounded font-mono font-bold">BANNED</span>` : ''}
+                  ${s.isRegisteredUser && s.count === 0 ? `<span class="bg-blue-950 text-blue-300 border border-blue-500/30 text-[8px] px-1.5 rounded font-mono">GOOGLE USER (NO ADS YET)</span>` : ''}
+                </div>
+                <p class="text-[10px] text-blue-400 font-mono truncate">📧 ${s.email}</p>
+                <p class="text-[9px] text-gray-400">📦 ${s.count} Ads Active • 📱 ${s.device || 'Mobile'} • 📍 ${s.region || 'TZ'}</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <button onclick="toggleVerifySeller('${s.email || s.name}')" class="px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all cursor-pointer ${isVer ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-900' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}">
+                ${isVer ? 'Verified 🌟' : 'Grant Badge 🛡️'}
+              </button>
+              <button onclick="toggleBanSeller('${s.email || s.name}')" class="px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all cursor-pointer ${isBanned ? 'bg-amber-600 text-white hover:bg-amber-500' : 'bg-rose-950/80 text-rose-300 border border-rose-500/40 hover:bg-rose-900'}">
+                ${isBanned ? 'Unban' : 'Ban 🛑'}
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    window.toggleVerifyAd = async function(id, status) {
+      if (db) {
+        try {
+          await updateDoc(doc(db, 'listings', id), { isVerified: status });
+          showAdminToast(status ? 'Verified Badge Imewekwa 🛡️' : 'Verified Badge Imeondolewa');
+        } catch(e) { console.warn(e); }
+      }
+    };
+
+    window.toggleVipAd = async function(id, status) {
+      if (db) {
+        try {
+          await updateDoc(doc(db, 'listings', id), { isFeatured: status });
+          showAdminToast(status ? 'Tangazo limewekwa VIP ⭐' : 'VIP imeondolewa');
+        } catch(e) { console.warn(e); }
+      }
+    };
+
+    window.dismissReport = async function(id) {
+      if (db) {
+        try {
+          await updateDoc(doc(db, 'listings', id), { reported: false });
+          showAdminToast('Ripoti imeondolewa');
+        } catch(e) { console.warn(e); }
+      }
+    };
+
+    window.confirmDeleteAd = function(id) {
+      pendingConfirmAction = async () => {
+        if (db) {
+          try {
+            await deleteDoc(doc(db, 'listings', id));
+            showAdminToast('Tangazo limefutwa kikamilifu!');
+          } catch(e) { console.warn(e); }
+        }
+      };
+      document.getElementById('confirmTitle').textContent = 'Futa Tangazo';
+      document.getElementById('confirmMessage').textContent = 'Je, una uhakika unataka kufuta tangazo hili kabisa?';
+      document.getElementById('confirmModal')?.classList.remove('hidden');
+    };
+
+    window.toggleVerifySeller = function(sellerName) {
+      const idx = verifiedSellers.indexOf(sellerName);
+      if (idx >= 0) verifiedSellers.splice(idx, 1);
+      else verifiedSellers.push(sellerName);
+      saveStorage('mtaax_verified_sellers', verifiedSellers);
+      showAdminToast('Hali ya Verified Badge imebadilishwa!');
+      renderAdminDashboard();
+    };
+
+    window.toggleBanSeller = function(sellerName) {
+      const idx = bannedSellers.indexOf(sellerName);
+      if (idx >= 0) bannedSellers.splice(idx, 1);
+      else bannedSellers.push(sellerName);
+      saveStorage('mtaax_banned_sellers', bannedSellers);
+      showAdminToast('Hali ya kumfungia muuzaji imebadilishwa!');
+      renderAdminDashboard();
+    };
+
+    document.getElementById('loginForm')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const pin = document.getElementById('pinInput').value;
+      if (pin === getAdminPin()) {
+        document.getElementById('authSection').classList.add('hidden');
+        document.getElementById('dashboardSection').classList.remove('hidden');
+        initAdminFirebase();
+      } else {
+        alert('PIN sio sahihi! (PIN ya sasa: ' + getAdminPin() + ')');
+      }
+    });
+
+    document.getElementById('changePinBtn')?.addEventListener('click', () => {
+      document.getElementById('currentPinInput').value = '';
+      document.getElementById('newPinInput').value = '';
+      document.getElementById('pinModal')?.classList.remove('hidden');
+    });
+
+    document.getElementById('closePinModal')?.addEventListener('click', () => {
+      document.getElementById('pinModal')?.classList.add('hidden');
+    });
+
+    document.getElementById('savePinBtn')?.addEventListener('click', () => {
+      const cur = document.getElementById('currentPinInput').value;
+      const next = document.getElementById('newPinInput').value;
+      
+      if (cur !== getAdminPin()) {
+        alert('PIN ya zamani siyo sahihi!');
+        return;
+      }
+      if (!next || next.length < 4) {
+        alert('PIN mpya lazima iwe na angalau tarakimu 4!');
+        return;
+      }
+
+      localStorage.setItem('mtaax_admin_custom_pin', next);
+      showAdminToast('PIN mpya imehifadhiwa kikamilifu! 🔑');
+      document.getElementById('pinModal')?.classList.add('hidden');
+    });
+
+    document.getElementById('logoutBtn')?.addEventListener('click', () => {
+      document.getElementById('authSection').classList.remove('hidden');
+      document.getElementById('dashboardSection').classList.add('hidden');
+    });
+
+    document.querySelectorAll('.admin-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.getAttribute('data-tab');
+        document.querySelectorAll('.admin-tab').forEach(t => {
+          t.classList.remove('active', 'bg-gradient-to-r', 'from-mtaa-500', 'to-emerald-400', 'text-gray-950', 'font-extrabold', 'shadow-glow-emerald');
+          t.classList.add('bg-gray-900', 'text-gray-400');
+        });
+        tab.classList.add('active', 'bg-gradient-to-r', 'from-mtaa-500', 'to-emerald-400', 'text-gray-950', 'font-extrabold', 'shadow-glow-emerald');
+        tab.classList.remove('bg-gray-900', 'text-gray-400');
+
+        document.querySelectorAll('.admin-view').forEach(v => v.classList.add('hidden'));
+        if (target === 'listings') document.getElementById('tabListings')?.classList.remove('hidden');
+        if (target === 'flagged') document.getElementById('tabFlagged')?.classList.remove('hidden');
+        if (target === 'sellers') document.getElementById('tabSellers')?.classList.remove('hidden');
+        if (target === 'broadcast') document.getElementById('tabBroadcast')?.classList.remove('hidden');
+      });
+    });
+
+    document.getElementById('adminSearchInput')?.addEventListener('input', () => renderAdminDashboard());
+    document.getElementById('reconnectBtn')?.addEventListener('click', () => initAdminFirebase());
+
+    document.getElementById('confirmCancelBtn')?.addEventListener('click', () => {
+      document.getElementById('confirmModal')?.classList.add('hidden');
+      pendingConfirmAction = null;
+    });
+
+    document.getElementById('confirmOkBtn')?.addEventListener('click', () => {
+      document.getElementById('confirmModal')?.classList.add('hidden');
+      if (pendingConfirmAction) pendingConfirmAction();
+      pendingConfirmAction = null;
+    });
+
+    document.getElementById('exportCsvBtn')?.addEventListener('click', () => {
+      if (allListings.length === 0) return alert('Hakuna data za ku-export!');
+      let csv = "ID,Title,Price,Region,District,Seller,Email,Phone,DeviceModel,CreatedAt\n";
+      allListings.forEach(l => {
+        csv += `"${l.id}","${(l.title||'').replace(/"/g, '""')}",${l.price},"${l.region}","${l.district}","${l.seller}","${l.sellerEmail||''}","${l.phone}","${l.securityTrack?.modelName||''}","${new Date(l.createdAt||Date.now()).toISOString()}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `MtaaX_Listings_${Date.now()}.csv`;
+      a.click();
+    });
+
+    document.getElementById('sendBroadcastBtn')?.addEventListener('click', async () => {
+      const text = document.getElementById('broadcastInput').value.trim();
+      if (!text) return alert('Andika ujumbe wa tangazo kwanza!');
+      if (db) {
+        try {
+          await setDoc(doc(db, 'system', 'broadcast'), { message: text, timestamp: Date.now() });
+          showAdminToast('Tangazo limetumwa moja kwa moja sokoni! 🚀');
+        } catch(e) { console.warn(e); }
+      }
+    });
+
+    document.getElementById('clearBroadcastBtn')?.addEventListener('click', async () => {
+      if (db) {
+        try {
+          await deleteDoc(doc(db, 'system', 'broadcast'));
+          document.getElementById('broadcastInput').value = '';
+          showAdminToast('Tangazo limefutwa sokoni. 🗑️');
+        } catch(e) { console.warn(e); }
+      }
+    });
+
+    document.getElementById('configBtn')?.addEventListener('click', () => {
+      document.getElementById('configJsonInput').value = JSON.stringify(firebaseConfig, null, 2);
+      document.getElementById('configModal')?.classList.remove('hidden');
+    });
+
+    document.getElementById('closeConfigModal')?.addEventListener('click', () => {
+      document.getElementById('configModal')?.classList.add('hidden');
+    });
+
+    document.getElementById('saveConfigBtn')?.addEventListener('click', () => {
+      try {
+        const val = document.getElementById('configJsonInput').value;
+        const parsed = JSON.parse(val);
+        localStorage.setItem('mtaax_firebase_custom_config', JSON.stringify(parsed));
+        showAdminToast('Config imehifadhiwa!');
+        document.getElementById('configModal')?.classList.add('hidden');
+        location.reload();
+      } catch(e) {
+        alert('Mfumo wa JSON hauko sahihi!');
+      }
+    });
+  </script>
+</body>
+</html>
